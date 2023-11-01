@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longqin.system.mapper.MenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.longqin.system.entity.Menu">
+        <id column="menu_id" property="menuId" />
+        <result column="menu_name" property="menuName" />
+        <result column="menu_url" property="menuUrl" />
+        <result column="parent_id" property="parentId" />
+        <result column="group_seq" property="groupSeq" />
+        <result column="menu_icon" property="menuIcon" />
+        <result column="controller" property="controller" />
+        <result column="action" property="action" />
+        <result column="create_time" property="createTime" />
+        <result column="organization_id" property="organizationId" />
+        <result column="status" property="status" />
+        <result column="creator" property="creator" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        menu_id, menu_name, menu_url, parent_id, group_seq, menu_icon, controller, action, create_time, organization_id, status, creator
+    </sql>
+    
+    <select id="selectById" resultMap="BaseResultMap">
+        select * from sys_menu where menu_id = #{id,jdbcType=INTEGER} and status = 1
+    </select>
+    
+    <select id="selectList" resultMap="BaseResultMap">
+        select * from sys_menu where status = 1 order by parent_id, group_seq
+    </select>
+    
+    <update id="updateStatus" >
+	    update sys_menu set status = 0 where menu_id = #{menuId,jdbcType=INTEGER}
+	</update>
+
+    <update id="updateByUrl" parameterType="com.longqin.system.entity.Menu" >
+	    update sys_menu set menu_name = #{menuName,jdbcType=VARCHAR} where menu_url = #{menuUrl,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="selectUserMenuList" resultMap="BaseResultMap"  >
+	    select distinct t.* from (select m.* from sys_userrole ur 
+        left join sys_rolemenu rm on rm.role_id = ur.role_id
+        left join sys_role r on r.role_id = rm.role_id
+        left join sys_menu m on m.menu_id = rm.menu_id
+        where ur.user_id = #{userId,jdbcType=INTEGER} and r.status = 1 and m.status = 1 
+        union select s.* from sys_menu s where s.organization_id = #{organizationId,jdbcType=INTEGER} and s.status=1) t
+        order by t.parent_id, t.group_seq
+    </select>
+  
+    <select id="selectCountByName" resultType="java.lang.Integer" >
+	    select count(0)
+	    from sys_menu where menu_name = #{menuName,jdbcType=VARCHAR}
+		and menu_id != #{menuId,jdbcType=INTEGER} and status = 1 and organization_id = 0
+    </select>
+    
+    <select id="selectChildrenCount" resultType="java.lang.Integer" >
+	    select count(0)
+	    from sys_menu where parent_id = #{parentId,jdbcType=INTEGER} and status = 1
+    </select>
+
+</mapper>

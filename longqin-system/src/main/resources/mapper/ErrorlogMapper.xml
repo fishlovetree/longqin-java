@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longqin.system.mapper.ErrorlogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.longqin.system.entity.Errorlog">
+        <id column="log_id" property="logId" />
+        <result column="user_id" property="userId" />
+        <result column="ip" property="ip" />
+        <result column="broswer" property="broswer" />
+        <result column="message" property="message" />
+        <result column="stacktrace" property="stacktrace" />
+        <result column="action" property="action" />
+        <result column="error_class" property="errorClass" />
+        <result column="create_time" property="createTime" />
+        
+        <result column="nick_name" property="nickName" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        log_id, user_id, ip, broswer, message, stacktrace, action, error_class, create_time
+    </sql>
+    
+    <select id="selectPage" resultMap="BaseResultMap">
+        select s.*, u.nick_name
+        from sys_errorlog s
+        left join sys_user u on u.user_id = s.user_id
+        where 1 = 1
+	    <if test="beginDate != null and beginDate != ''">
+	        and s.create_time &gt;= #{beginDate,jdbcType=VARCHAR}
+	    </if>
+	    <if test="endDate != null and endDate != ''">
+	        and s.create_time &lt;= #{endDate,jdbcType=VARCHAR}
+	    </if>
+	    order by s.log_id desc
+        limit #{startIndex,jdbcType=DECIMAL}, #{size,jdbcType=DECIMAL}
+    </select>
+    
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(0) from sys_errorlog s
+        where 1 = 1
+	    <if test="beginDate != null and beginDate != ''">
+	        and s.create_time &gt;= #{beginDate,jdbcType=VARCHAR}
+	    </if>
+	    <if test="endDate != null and endDate != ''">
+	        and s.create_time &lt;= #{endDate,jdbcType=VARCHAR}
+	    </if>
+    </select>
+
+</mapper>

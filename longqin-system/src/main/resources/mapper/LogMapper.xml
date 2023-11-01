@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longqin.system.mapper.LogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.longqin.system.entity.Log">
+        <id column="log_id" property="logId" />
+        <result column="title" property="title" />
+        <result column="remark" property="remark" />
+        <result column="controller_name" property="controllerName" />
+        <result column="action_name" property="actionName" />
+        <result column="action_parameters" property="actionParameters" />
+        <result column="creator" property="creator" />
+        <result column="create_time" property="createTime" />
+        <result column="organization_id" property="organizationId" />
+        
+        <result column="creator_name" property="creatorName" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        log_id, title, remark, controller_name, action_name, action_parameters, creator, create_time, organization_id
+    </sql>
+    
+    <select id="selectPage" resultMap="BaseResultMap">
+        select s.*, u.nick_name as creator_name
+        from sys_log s
+        left join sys_user u on u.user_id = s.creator
+        where 1 = 1
+        <if test="organizationId != 0">
+	        and s.organization_id = #{organizationId,jdbcType=INTEGER}
+	    </if>
+	    <if test="beginDate != null and beginDate != ''">
+	        and s.create_time &gt;= #{beginDate,jdbcType=VARCHAR}
+	    </if>
+	    <if test="endDate != null and endDate != ''">
+	        and s.create_time &lt;= #{endDate,jdbcType=VARCHAR}
+	    </if>
+	    order by s.log_id desc
+        limit #{startIndex,jdbcType=DECIMAL}, #{size,jdbcType=DECIMAL}
+    </select>
+    
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(0) from sys_log s
+        where 1 = 1
+        <if test="organizationId != 0">
+	        and s.organization_id = #{organizationId,jdbcType=INTEGER}
+	    </if>
+	    <if test="beginDate != null and beginDate != ''">
+	        and s.create_time &gt;= #{beginDate,jdbcType=VARCHAR}
+	    </if>
+	    <if test="endDate != null and endDate != ''">
+	        and s.create_time &lt;= #{endDate,jdbcType=VARCHAR}
+	    </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longqin.system.mapper.NoticeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.longqin.system.entity.Notice">
+        <id column="notice_id" property="noticeId" />
+        <result column="title" property="title" />
+        <result column="notice_level" property="noticeLevel" />
+        <result column="security" property="security" />
+        <result column="create_time" property="createTime" />
+        <result column="organization_id" property="organizationId" />
+        <result column="status" property="status" />
+        <result column="creator" property="creator" />
+        <result column="content" property="content" />
+        <result column="attachments" property="attachments" />
+        
+        <result column="creator_name" property="creatorName" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        notice_id, title, notice_level, security, create_time, organization_id, status, creator, content, attachments
+    </sql>
+    
+    <select id="selectPage" resultMap="BaseResultMap">
+        select s.*, u.nick_name as creator_name
+        from sys_notice s
+        left join sys_user u on u.user_id = s.creator
+        where 1 = 1
+        <if test="organizationId != 0">
+	        and s.organization_id = #{organizationId,jdbcType=INTEGER}
+	    </if>
+	    <if test="title != null and title != ''">
+	        and s.title like concat('%', concat(#{title,jdbcType=VARCHAR}, '%'))
+	    </if>
+	    <if test="beginDate != null and beginDate != ''">
+	        and s.create_time &gt;= #{beginDate,jdbcType=VARCHAR}
+	    </if>
+	    <if test="endDate != null and endDate != ''">
+	        and s.create_time &lt;= #{endDate,jdbcType=VARCHAR}
+	    </if>
+	    order by s.notice_id desc
+        limit #{startIndex,jdbcType=DECIMAL}, #{size,jdbcType=DECIMAL}
+    </select>
+    
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(0) from sys_notice s
+        where 1 = 1
+        <if test="organizationId != 0">
+	        and s.organization_id = #{organizationId,jdbcType=INTEGER}
+	    </if>
+	    <if test="title != null and title != ''">
+	        and s.title like concat('%', concat(#{title,jdbcType=VARCHAR}, '%'))
+	    </if>
+	    <if test="beginDate != null and beginDate != ''">
+	        and s.create_time &gt;= #{beginDate,jdbcType=VARCHAR}
+	    </if>
+	    <if test="endDate != null and endDate != ''">
+	        and s.create_time &lt;= #{endDate,jdbcType=VARCHAR}
+	    </if>
+    </select>
+    
+    <update id="updateStatus">
+	    update sys_notice set status = 0 where notice_id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<select id="selectNoticeFiles" resultType="java.lang.String">
+        select file_path from sys_notice_files where notice_id = #{id,jdbcType=INTEGER}
+    </select>
+    
+    <delete id="deleteNoticeFiles" parameterType="java.lang.Integer" >
+        delete from sys_notice_files where notice_id = #{id,jdbcType=INTEGER}
+    </delete>
+    
+    <insert id="insertNoticeFiles" useGeneratedKeys="false">
+        insert into sys_notice_files (notice_id, file_path) 
+	    <foreach collection="filePaths" index="index" item="item" separator="union all">
+	    (
+		    SELECT 
+		    #{noticeId,jdbcType=INTEGER} notice_id,
+		    #{item,jdbcType=VARCHAR} file_path
+		    FROM dual
+	    )
+        </foreach>
+    </insert>
+
+</mapper>

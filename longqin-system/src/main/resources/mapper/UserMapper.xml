@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longqin.system.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.longqin.system.entity.User">
+        <id column="user_id" property="userId" />
+        <result column="user_name" property="userName" />
+        <result column="password" property="password" />
+        <result column="nick_name" property="nickName" />
+        <result column="create_time" property="createTime" />
+        <result column="status" property="status" />
+        <result column="email" property="email" />
+        <result column="phone" property="phone" />
+        <result column="avatar" property="avatar" />
+        <result column="department_id" property="departmentId" />
+        <result column="position_id" property="positionId" />
+        <result column="description" property="description" />
+        <result column="organization_id" property="organizationId" />
+        
+        <result column="department_name" property="departmentName" />
+        <result column="position_name" property="positionName" />
+        <result column="organization_name" property="organizationName" />
+        <result column="logo_path" property="logoPath" />
+        <result column="system_name" property="systemName" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        user_id, user_name, password, nick_name, create_time, status, email, phone, avatar, department_id, 
+        position_id, description, organization_id, department_name, position_name, organization_name,
+        logo_path, system_name
+    </sql>
+    
+    <select id="selectById" resultMap="BaseResultMap">
+        select u.*, s.organization_name, s.logo_path, s.system_name from sys_user u 
+        left join sys_organization s on s.organization_id = u.organization_id 
+        where u.user_id = #{id,jdbcType=INTEGER} and u.status = 1
+    </select>
+    
+    <select id="selectByName" resultMap="BaseResultMap">
+        select u.*, s.organization_name, s.logo_path, s.system_name from sys_user u 
+        left join sys_organization s on s.organization_id = u.organization_id 
+        where u.user_name = #{userName,jdbcType=VARCHAR} and u.status = 1
+    </select>
+    
+    <select id="selectCountByName" resultType="java.lang.Integer">
+        select count(0) from sys_user where user_name = #{userName,jdbcType=VARCHAR} and status=1 and user_id != #{id,jdbcType=INTEGER}
+    </select>
+    
+    <select id="selectPage" resultMap="BaseResultMap">
+        select u.*, d.department_name, s.position_name from sys_user u
+        left join sys_department d on d.department_id = u.department_id
+        left join sys_position s on s.position_id = u.position_id
+        where u.status = 1
+        <if test="organizationId != 0">
+	        and u.organization_id = #{organizationId,jdbcType=INTEGER}
+	    </if>
+	    <if test="departmentId != null and departmentId != ''">
+	        and u.department_id = #{departmentId,jdbcType=VARCHAR}
+	    </if>
+	    <if test="nickName != null and nickName != ''">
+	        and u.nick_name like concat('%', concat(#{nickName,jdbcType=VARCHAR}, '%'))
+	    </if>
+	    order by u.user_id desc
+        limit #{startIndex,jdbcType=DECIMAL}, #{size,jdbcType=DECIMAL}
+    </select>
+    
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(0) from sys_user u
+        where u.status = 1
+        <if test="organizationId != 0">
+	        and u.organization_id = #{organizationId,jdbcType=INTEGER}
+	    </if>
+	    <if test="departmentId != null and departmentId != ''">
+	        and u.department_id = #{departmentId,jdbcType=VARCHAR}
+	    </if>
+	    <if test="nickName != null and nickName != ''">
+	        and u.nick_name like concat('%', concat(#{nickName,jdbcType=VARCHAR}, '%'))
+	    </if>
+    </select>
+    
+    <update id="updateStatus">
+	    update sys_user set status = 0 where user_id = #{id,jdbcType=INTEGER}
+	</update>
+    
+    <update id="updatePassword" >
+	    update sys_user set password = #{pwd,jdbcType=VARCHAR} where user_id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<select id="selectUserRoles" resultType="java.lang.Integer">
+        select role_id from sys_userrole where user_id = #{id,jdbcType=INTEGER}
+    </select>
+    
+    <delete id="deleteUserRole" parameterType="java.lang.Integer" >
+        delete from sys_userrole where user_id = #{id,jdbcType=INTEGER}
+    </delete>
+    
+    <insert id="insertUserRole" useGeneratedKeys="false">
+        insert into sys_userrole (user_id, role_id) 
+	    <foreach collection="roles" index="index" item="item" separator="union all">
+	    (
+		    SELECT 
+		    #{userId,jdbcType=INTEGER} user_id,
+		    #{item,jdbcType=INTEGER} role_id
+		    FROM dual
+	    )
+        </foreach>
+    </insert>
+     
+    <select id="selectUserPositionLevel" resultType="java.lang.Integer">
+        select p.position_level from sys_user u 
+        left join sys_position p on p.position_id = u.position_id where u.user_id = #{id,jdbcType=INTEGER}
+    </select>
+    
+    <select id="selectUserIdByDeptAndPosition" resultType="java.lang.Integer">
+        select u.user_id from sys_user u where u.department_id = #{departmentId,jdbcType=INTEGER} 
+        and u.position_id = #{positionId,jdbcType=INTEGER}
+    </select>
+
+</mapper>

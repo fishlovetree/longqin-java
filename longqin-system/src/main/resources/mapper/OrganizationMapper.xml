@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longqin.system.mapper.OrganizationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.longqin.system.entity.Organization">
+        <id column="organization_id" property="organizationId" />
+        <result column="organization_code" property="organizationCode" />
+        <result column="organization_name" property="organizationName" />
+        <result column="parent_id" property="parentId" />
+        <result column="create_time" property="createTime" />
+        <result column="status" property="status" />
+        <result column="address" property="address" />
+        <result column="phone" property="phone" />
+        <result column="logo_path" property="logoPath" />
+        <result column="system_name" property="systemName" />
+        <result column="introduction" property="introduction" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        organization_id, organization_code, organization_name, parent_id, create_time, status, address, phone, logo_path, system_name, introduction
+    </sql>
+    
+    <select id="selectById" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_organization
+		where organization_id = #{id,jdbcType=INTEGER} and status = 1
+	</select>
+
+	<select id="selectByCode" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_organization
+		where organization_code = #{code,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectByName" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_organization
+		where organization_name = #{name,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectCountByName" resultType="java.lang.Integer">
+		select count(0)
+		from sys_organization
+		where organization_name = #{name,jdbcType=VARCHAR}
+		and organization_id != #{id,jdbcType=INTEGER} 
+	</select>
+
+	<select id="selectList" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_organization n where n.status = 1
+		order by n.organization_id desc
+	</select>
+	
+	<select id="selectPage" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_organization n where n.status = 1
+		order by n.organization_id desc
+		limit #{startIndex,jdbcType=DECIMAL}, #{size,jdbcType=DECIMAL}
+	</select>
+	
+	<select id="selectCount" resultType="java.lang.Integer">
+		select count(0)
+		from sys_organization n where n.status = 1
+	</select>
+	
+	<update id="updateStatus">
+	    update sys_organization set status = 0 where organization_id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

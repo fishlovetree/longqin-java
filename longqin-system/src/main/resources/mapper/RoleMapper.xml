@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longqin.system.mapper.RoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.longqin.system.entity.Role">
+        <id column="role_id" property="roleId" />
+        <result column="role_name" property="roleName" />
+        <result column="create_time" property="createTime" />
+        <result column="status" property="status" />
+        <result column="creator" property="creator" />
+        <result column="description" property="description" />
+        <result column="organization_id" property="organizationId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        role_id, role_name, create_time, status, creator, description, organization_id
+    </sql>
+    
+    <select id="selectById" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_role
+		where role_id = #{id,jdbcType=INTEGER} and status = 1
+	</select>
+
+	<select id="selectList" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_role n where n.status = 1
+		<if test="organizationId != 0">
+	        and n.organization_id = #{organizationId,jdbcType=INTEGER}
+	    </if>
+		order by n.role_id desc
+	</select>
+	
+	<select id="selectPage" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_role n where n.status = 1
+		<if test="organizationId != 0">
+	        and n.organization_id = #{organizationId,jdbcType=INTEGER}
+	    </if>
+		order by n.role_id desc
+		limit #{startIndex,jdbcType=DECIMAL}, #{size,jdbcType=DECIMAL}
+	</select>
+	
+	<select id="selectCount" resultType="java.lang.Integer">
+		select count(0)
+		from sys_role n where n.status = 1
+		<if test="organizationId != 0">
+	        and n.organization_id = #{organizationId,jdbcType=INTEGER}
+	    </if>
+	</select>
+	
+	<update id="updateStatus">
+	    update sys_role set status = 0 where role_id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<select id="selectRoleMenus" resultType="java.lang.Integer">
+        select menu_id from sys_rolemenu where role_id = #{id,jdbcType=INTEGER}
+    </select>
+    
+    <delete id="deleteRoleMenu" parameterType="java.lang.Integer" >
+        delete from sys_rolemenu where role_id = #{id,jdbcType=INTEGER}
+    </delete>
+    
+    <insert id="insertRoleMenu" useGeneratedKeys="false">
+        insert into sys_rolemenu (role_id, menu_id) 
+	    <foreach collection="menus" index="index" item="item" separator="union all">
+	    (
+		    SELECT 
+		    #{roleId,jdbcType=INTEGER} role_id,
+		    #{item,jdbcType=INTEGER} menu_id
+		    FROM dual
+	    )
+        </foreach>
+    </insert>
+
+</mapper>
