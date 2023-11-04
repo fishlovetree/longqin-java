@@ -19,6 +19,7 @@ import com.longqin.system.service.IMenuService;
 import com.longqin.system.service.IOrganizationService;
 import com.longqin.system.service.IUserService;
 import com.longqin.system.util.MD5Util;
+import com.longqin.system.util.OperationLog;
 import com.longqin.system.util.ResponseData;
 import com.longqin.system.util.ResponseEnum;
 import com.longqin.system.util.SessionUtil;
@@ -68,17 +69,17 @@ public class LoginController {
 	    @ApiResponse(code = 2, message="账号名或密码错误")
 	})
     @PostMapping("/login")
-    //@OperationLog(title = "账号登录", content = "'账号：' + {#userName} ", operationType = "5")
+    @OperationLog(title = "账号登录", content = "'账号：' + {#userName} ", operationType = "5")
     public ResponseData login(@RequestParam("userName") String userName, @RequestParam("password") String password) throws Exception {
-    	if (null == userName || null == password){
+    	if (null == userName || null == password) {
     		return new ResponseData(ResponseEnum.BADPARAM.getCode(), "用户名和密码不能为空");
     	}
         User user = userService.getByName(userName);
-        if (null == user){
+        if (null == user) {
         	return new ResponseData(ResponseEnum.ERROR.getCode(), "用户名或密码错误");
         }
         
-        if (!user.getPassword().equals(MD5Util.MD5(password))){
+        if (!user.getPassword().equals(MD5Util.MD5(password))) {
         	return new ResponseData(2, "用户名或密码错误");
         }
 

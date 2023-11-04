@@ -62,8 +62,8 @@ public class OrganizationController {
 	 */
 	@ApiOperation(value = "分页获取公司", httpMethod = "GET")
 	@ApiImplicitParams({ 
-		@ApiImplicitParam(name = "page", value = "页数", dataType = "Integer"),
-		@ApiImplicitParam(name = "size", value = "每页数量", dataType = "Integer") })
+		@ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "Integer"),
+		@ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "Integer") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败"), @ApiResponse(code = 3, message = "参数错误") })
 	@GetMapping("/getOrganizationPage")
 	@RequiredPermission("organization:view")
@@ -85,7 +85,7 @@ public class OrganizationController {
 	 * @Time: 2023年10月22日
 	 */
 	@ApiOperation(value = "添加公司", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "organization", value = "公司实体项", dataType = "Organization") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "organization", value = "公司实体项", required = true, dataType = "Organization") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "添加成功"), @ApiResponse(code = 0, message = "添加失败"),
 			@ApiResponse(code = 2, message = "公司已存在"), @ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/create")
@@ -95,8 +95,8 @@ public class OrganizationController {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
 		// 上传文件
-		if(null != file){
-			if(file.getBytes().length > 4 * 1024 * 1024){//图标需小于4M
+		if(null != file) {
+			if(file.getBytes().length > 4 * 1024 * 1024) {//图标需小于4M
 				return new ResponseData(ResponseEnum.ERROR.getCode(), "图标过大");
 			}
 			
@@ -105,21 +105,22 @@ public class OrganizationController {
             if (fileType.equals("image/jpeg") || fileType.equals("image/png") || fileType.equals("image/jpeg")) {
     			String fileName = file.getOriginalFilename();
     			String logoPath = UploadUtils.coverUpload(file.getInputStream(), fileName);
-    			if(logoPath.equals(""))
+    			if(logoPath.equals("")) {
     				return new ResponseData(ResponseEnum.ERROR.getCode(), "上传LOGO失败", null);
-    			else{
+    			}
+    			else {
     				organization.setLogoPath(logoPath);
     			}
             }
 		}
 		int result = organizationService.insert(organization);
-		if (result > 0){
+		if (result > 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "添加成功", result);
 		}
-		else if (result == -2){
+		else if (result == -2) {
 			return new ResponseData(ResponseEnum.REPEAT.getCode(), "公司已存在", result);
 		}
-		else{
+		else {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "添加失败", result);
 		}
 	}
@@ -130,7 +131,7 @@ public class OrganizationController {
 	 * @Time: 2023年10月22日
 	 */
 	@ApiOperation(value = "修改公司", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "organization", value = "公司实体项", dataType = "Organization") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "organization", value = "公司实体项", required = true, dataType = "Organization") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "修改成功"), @ApiResponse(code = 0, message = "修改失败"),
 			@ApiResponse(code = 2, message = "公司已存在"), @ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/update")
@@ -140,8 +141,8 @@ public class OrganizationController {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
 		// 上传文件
-		if(null != file){
-			if(file.getBytes().length > 4 * 1024 * 1024){//图标需小于4M
+		if(null != file) {
+			if(file.getBytes().length > 4 * 1024 * 1024) {//图标需小于4M
 				return new ResponseData(ResponseEnum.ERROR.getCode(), "图标过大");
 			}
 			
@@ -150,21 +151,22 @@ public class OrganizationController {
             if (fileType.equals("image/jpeg") || fileType.equals("image/png") || fileType.equals("image/jpeg")) {
     			String fileName = file.getOriginalFilename();
     			String logoPath = UploadUtils.coverUpload(file.getInputStream(), fileName);
-    			if(logoPath.equals(""))
+    			if(logoPath.equals("")) {
     				return new ResponseData(ResponseEnum.ERROR.getCode(), "上传LOGO失败", null);
-    			else{
+    			}
+    			else {
     				organization.setLogoPath(logoPath);
     			}
             }
 		}
 		int result = organizationService.update(organization);
-		if (result > 0){
+		if (result > 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "修改成功", result);
 		}
-		else if (result == -2){
+		else if (result == -2) {
 			return new ResponseData(ResponseEnum.REPEAT.getCode(), "公司已存在", result);
 		}
-		else{
+		else {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "修改失败", result);
 		}
 	}
@@ -181,10 +183,10 @@ public class OrganizationController {
 	@RequiredPermission("organization:view")
 	public ResponseData delete(int organizationId) throws Exception {
 		int result = organizationService.delete(organizationId);
-		if (result >= 0){
+		if (result >= 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "删除成功", result);
 		}
-		else{
+		else {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "删除失败", result);
 		}
 	}

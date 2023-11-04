@@ -25,26 +25,22 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements ILogS
 	LogMapper logMapper;
 	
 	@Override
-	public Log getById(int id)
-    {
+	public Log getById(int id) {
         return logMapper.selectById(id);
     }
 
 	@Override
-    public List<Log> getPage(int organizationId, String beginDate, String endDate, int startIndex, int pageSize)
-    {
+    public List<Log> getPage(int organizationId, String beginDate, String endDate, int startIndex, int pageSize) {
         return logMapper.selectPage(organizationId, beginDate, endDate, startIndex, pageSize);
     }
     
 	@Override
-    public int getCount(int organizationId, String beginDate, String endDate)
-    {
+    public int getCount(int organizationId, String beginDate, String endDate) {
         return logMapper.selectCount(organizationId, beginDate, endDate);
     }
 
 	@Override
-    public int insert(Log entity) throws Exception
-    {
+    public int insert(Log entity) throws Exception {
         return logMapper.insert(entity);
     }
 }

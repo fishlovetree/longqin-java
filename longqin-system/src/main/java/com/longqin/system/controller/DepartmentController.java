@@ -51,7 +51,7 @@ public class DepartmentController {
 	})
 	@GetMapping("/getDepartmentList")
 	@RequiredPermission("department:view")
-	public ResponseData getDepartmentList(){
+	public ResponseData getDepartmentList() {
 		List<Department> departmentList = departmentService.getDepartmentList(SessionUtil.getSessionUser().getOrganizationId());
 		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", departmentList);
 	}
@@ -67,7 +67,7 @@ public class DepartmentController {
 	    @ApiResponse(code = 0, message="查询失败")
 	})
 	@GetMapping("/getDepartmentTree")
-	public ResponseData getDepartmentTree(){
+	public ResponseData getDepartmentTree() {
 		List<Map<String, Object>> departmentTree = departmentService.getDepartmentTree(SessionUtil.getSessionUser().getOrganizationId());
 		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", departmentTree);
 	}
@@ -79,7 +79,7 @@ public class DepartmentController {
 	 */
 	@ApiOperation(value = "添加部门", httpMethod = "POST")
     @ApiImplicitParams({
-    	@ApiImplicitParam(name = "department", value = "部门实体", dataType = "Department")
+    	@ApiImplicitParam(name = "department", value = "部门实体", required = true, dataType = "Department")
     })
 	@ApiResponses({
 	    @ApiResponse(code = 1, message="添加成功"),
@@ -88,20 +88,19 @@ public class DepartmentController {
 	})
 	@PostMapping("/create")
 	@RequiredPermission("department:view")
-	public ResponseData create(Department department) throws Exception{
-		if (null == department){
+	public ResponseData create(Department department) throws Exception {
+		if (null == department) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
 		department.setCreator(SessionUtil.getSessionUser().getUserId());
-		if (null == department.getOrganizationId())
-        {
+		if (null == department.getOrganizationId()) {
 			department.setOrganizationId(SessionUtil.getSessionUser().getOrganizationId());
         }
 		int result = departmentService.addDepartment(department);
-		if (result > 0){
+		if (result > 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "添加成功", result);
 		}
-		else{
+		else {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "添加失败", result);
 		}
 	}
@@ -113,7 +112,7 @@ public class DepartmentController {
 	 */
 	@ApiOperation(value = "修改部门", httpMethod = "POST")
     @ApiImplicitParams({
-    	@ApiImplicitParam(name = "department", value = "部门实体", dataType = "Department")
+    	@ApiImplicitParam(name = "department", value = "部门实体", required = true, dataType = "Department")
     })
 	@ApiResponses({
 	    @ApiResponse(code = 1, message="修改成功"),
@@ -122,12 +121,12 @@ public class DepartmentController {
 	})
 	@PostMapping("/update")
 	@RequiredPermission("department:view")
-	public ResponseData update(Department department) throws Exception{
-		if (null == department){
+	public ResponseData update(Department department) throws Exception {
+		if (null == department) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
 		int result = departmentService.editDepartment(department);
-		if (result > 0){
+		if (result > 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "修改成功", result);
 		}
 		else{
@@ -142,7 +141,7 @@ public class DepartmentController {
 	 */
 	@ApiOperation(value = "删除部门", httpMethod = "POST")
     @ApiImplicitParams({
-    	@ApiImplicitParam(name = "departmentId", value = "部门ID", dataType = "int")
+    	@ApiImplicitParam(name = "departmentId", value = "部门ID", required = true, dataType = "int")
     })
 	@ApiResponses({
 	    @ApiResponse(code = 1, message="删除成功"),
@@ -150,15 +149,15 @@ public class DepartmentController {
 	})
 	@PostMapping("/delete")
 	@RequiredPermission("department:view")
-	public ResponseData delete(int departmentId) throws Exception{
+	public ResponseData delete(int departmentId) throws Exception {
 		int result = departmentService.deleteDepartment(departmentId);
-		if (result >= 0){
+		if (result >= 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "删除成功", result);
 		}
-		else if (result == -1){
+		else if (result == -1) {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "存在子部门，请先删除子部门", result);
 		}
-		else{
+		else {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "删除失败", result);
 		}
 	}

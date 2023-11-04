@@ -51,7 +51,7 @@ public class MenuController {
 	})
 	@GetMapping("/getMenuList")
 	@RequiredPermission("menu:view")
-	public ResponseData getMenuList(){
+	public ResponseData getMenuList() {
 		List<Menu> menuList = menuService.getMenuList();
 		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", menuList);
 	}
@@ -68,7 +68,7 @@ public class MenuController {
 	})
 	@GetMapping("/getMenuTree")
 	@RequiredPermission("menu:view")
-	public ResponseData getMenuTree(){
+	public ResponseData getMenuTree() {
 		List<Map<String, Object>> menuTree = menuService.getMenuTree();
 		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", menuTree);
 	}
@@ -80,7 +80,7 @@ public class MenuController {
 	 */
 	@ApiOperation(value = "添加菜单", httpMethod = "POST")
     @ApiImplicitParams({
-    	@ApiImplicitParam(name = "menu", value = "菜单实体", dataType = "Menu")
+    	@ApiImplicitParam(name = "menu", value = "菜单实体", required = true, dataType = "Menu")
     })
 	@ApiResponses({
 	    @ApiResponse(code = 1, message="添加成功"),
@@ -90,23 +90,22 @@ public class MenuController {
 	})
 	@PostMapping("/create")
 	@RequiredPermission("menu:view")
-	public ResponseData create(Menu menu) throws Exception{
-		if (null == menu){
+	public ResponseData create(Menu menu) throws Exception {
+		if (null == menu) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
 		menu.setCreator(SessionUtil.getSessionUser().getUserId());
-		if (null == menu.getOrganizationId())
-        {
+		if (null == menu.getOrganizationId()) {
 			menu.setOrganizationId(SessionUtil.getSessionUser().getOrganizationId());
         }
 		int result = menuService.addMenu(menu);
-		if (result > 0){
+		if (result > 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "添加成功", result);
 		}
-		else if (result == -2){
+		else if (result == -2) {
 			return new ResponseData(ResponseEnum.REPEAT.getCode(), "菜单已存在", result);
 		}
-		else{
+		else {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "添加失败", result);
 		}
 	}
@@ -118,7 +117,7 @@ public class MenuController {
 	 */
 	@ApiOperation(value = "修改菜单", httpMethod = "POST")
     @ApiImplicitParams({
-    	@ApiImplicitParam(name = "menu", value = "菜单实体", dataType = "Menu")
+    	@ApiImplicitParam(name = "menu", value = "菜单实体", required = true, dataType = "Menu")
     })
 	@ApiResponses({
 	    @ApiResponse(code = 1, message="修改成功"),
@@ -128,18 +127,18 @@ public class MenuController {
 	})
 	@PostMapping("/update")
 	@RequiredPermission("menu:view")
-	public ResponseData update(Menu menu) throws Exception{
-		if (null == menu){
+	public ResponseData update(Menu menu) throws Exception {
+		if (null == menu) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
 		int result = menuService.editMenu(menu);
-		if (result > 0){
+		if (result > 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "修改成功", result);
 		}
-		else if (result == -2){
+		else if (result == -2) {
 			return new ResponseData(ResponseEnum.REPEAT.getCode(), "菜单已存在", result);
 		}
-		else{
+		else {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "修改失败", result);
 		}
 	}
@@ -151,7 +150,7 @@ public class MenuController {
 	 */
 	@ApiOperation(value = "删除菜单", httpMethod = "POST")
     @ApiImplicitParams({
-    	@ApiImplicitParam(name = "menuId", value = "菜单ID", dataType = "int")
+    	@ApiImplicitParam(name = "menuId", value = "菜单ID", required = true, dataType = "int")
     })
 	@ApiResponses({
 	    @ApiResponse(code = 1, message="删除成功"),
@@ -159,15 +158,15 @@ public class MenuController {
 	})
 	@PostMapping("/delete")
 	@RequiredPermission("menu:view")
-	public ResponseData delete(int menuId) throws Exception{
+	public ResponseData delete(int menuId) throws Exception {
 		int result = menuService.deleteMenu(menuId);
-		if (result >= 0){
+		if (result >= 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "删除成功", result);
 		}
-		else if (result == -1){
+		else if (result == -1) {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "存在子菜单，请先删除子菜单", result);
 		}
-		else{
+		else {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "删除失败", result);
 		}
 	}

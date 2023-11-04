@@ -57,7 +57,7 @@ public class RoleController {
 	 * @Time: 2023年10月22日
 	 */
 	@ApiOperation(value = "添加角色", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "role", value = "角色实体项", dataType = "Role") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "role", value = "角色实体项", required = true, dataType = "Role") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "添加成功"), @ApiResponse(code = 0, message = "添加失败"),
 			 @ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/create")
@@ -67,15 +67,14 @@ public class RoleController {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
 		role.setCreator(SessionUtil.getSessionUser().getUserId());
-		if (null == role.getOrganizationId())
-        {
+		if (null == role.getOrganizationId()) {
 			role.setOrganizationId(SessionUtil.getSessionUser().getOrganizationId());
         }
 		int result = roleService.insert(role);
-		if (result > 0){
+		if (result > 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "添加成功", result);
 		}
-		else{
+		else {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "添加失败", result);
 		}
 	}
@@ -86,7 +85,7 @@ public class RoleController {
 	 * @Time: 2023年10月22日
 	 */
 	@ApiOperation(value = "修改角色", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "role", value = "角色实体项", dataType = "Role") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "role", value = "角色实体项", required = true, dataType = "Role") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "修改成功"), @ApiResponse(code = 0, message = "修改失败"),
 			@ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/update")
@@ -96,10 +95,10 @@ public class RoleController {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
 		int result = roleService.update(role);
-		if (result > 0){
+		if (result > 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "修改成功", result);
 		}
-		else{
+		else {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "修改失败", result);
 		}
 	}
@@ -116,10 +115,10 @@ public class RoleController {
 	@RequiredPermission("role:view")
 	public ResponseData delete(int roleId) throws Exception {
 		int result = roleService.delete(roleId);
-		if (result >= 0){
+		if (result >= 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "删除成功", result);
 		}
-		else{
+		else {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "删除失败", result);
 		}
 	}
@@ -145,8 +144,8 @@ public class RoleController {
 	 * @Time: 2023年10月22日
 	 */
 	@ApiOperation(value = "设置角色菜单", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "roleId", value = "角色ID", dataType = "int"),
-			@ApiImplicitParam(name = "menuIdStr", value = "逗号拼接的菜单ID字符串", dataType = "String") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "roleId", value = "角色ID", required = true, dataType = "int"),
+			@ApiImplicitParam(name = "menuIdStr", value = "逗号拼接的菜单ID字符串", required = true, dataType = "String") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "设置成功"), @ApiResponse(code = 0, message = "设置失败"),
 			@ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/updateRoleMenu")
@@ -156,10 +155,10 @@ public class RoleController {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误", null);
 		}
 		int result = roleService.setMenu(roleId, menuIdStr);
-		if (result > 0){
+		if (result > 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "设置成功", result);
 		}
-		else{
+		else {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "设置失败", result);
 		}
 	}

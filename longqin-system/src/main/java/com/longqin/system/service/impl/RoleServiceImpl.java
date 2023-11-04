@@ -28,62 +28,53 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 	RoleMapper roleMapper;
 	
 	@Override
-    public Role getById(int id)
-    {
+    public Role getById(int id) {
         return roleMapper.selectById(id);
     }
     
 	@Override
-    public List<Role> getList(int organizationId)
-    {
+    public List<Role> getList(int organizationId) {
         return roleMapper.selectList(organizationId);
     }
 
 	@Override
-    public List<Role> getPage(int organizationId, int startIndex, int pageSize)
-    {
+    public List<Role> getPage(int organizationId, int startIndex, int pageSize) {
         return roleMapper.selectPage(organizationId, startIndex, pageSize);
     }
     
 	@Override
-    public int getCount(int organizationId)
-    {
+    public int getCount(int organizationId) {
         return roleMapper.selectCount(organizationId);
     }
 
 	@OperationLog(title = "删除角色", content = "'角色id：' + #id", operationType = "1")
 	@Override
-    public int delete(int id) throws Exception
-    {
+    public int delete(int id) throws Exception {
         return roleMapper.updateStatus(id);
     }
 
 	@OperationLog(title = "添加角色", content = "'角色名称：' + #entity.getRoleName()", operationType = "0")
 	@Override
-    public int insert(Role entity) throws Exception
-    {
+    public int insert(Role entity) throws Exception {
         return roleMapper.insert(entity);
     }
 
 	@OperationLog(title = "修改角色", content = "'角色名称：' + #entity.getRoleName()", operationType = "2")
 	@Override
-    public int update(Role entity) throws Exception
-    {
+    public int update(Role entity) throws Exception {
         return roleMapper.updateById(entity);
     }
 
 	@Override
-    public List<Integer> getMenus(int roleId)
-    {
+    public List<Integer> getMenus(int roleId) {
         return roleMapper.selectRoleMenus(roleId);
     }
 
 	@OperationLog(title = "设置角色菜单", content = "'角色id：' + #roleId + ', 菜单id：' + #menuIds", operationType = "7")
 	@Override
-    public int setMenu(int roleId, String menuIds) throws Exception
-    {
+    public int setMenu(int roleId, String menuIds) throws Exception {
     	int result = roleMapper.deleteRoleMenu(roleId);
-		if (menuIds != null && menuIds.length() > 0){
+		if (menuIds != null && menuIds.length() > 0) {
 			List<Integer> menuIdArray = Arrays.asList(menuIds.split(",")).stream().map(Integer::parseInt).collect(Collectors.toList());
 		    result = roleMapper.insertRoleMenu(roleId, menuIdArray);
 		}

@@ -37,4 +37,8 @@ public interface IUserService extends IService<User> {
     List<Integer> getRoles(int userId);
 
     int setRole(int userId, String roleIds) throws Exception;
+    
+    int getUserPositionLevel(int userId);
+    
+    List<Integer> getFlowHandlers(Integer userId, Integer departmentId, Integer positionId, int submitterId);
 }

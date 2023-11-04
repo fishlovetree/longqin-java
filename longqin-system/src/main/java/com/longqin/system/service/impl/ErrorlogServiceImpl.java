@@ -25,26 +25,22 @@ public class ErrorlogServiceImpl extends ServiceImpl<ErrorlogMapper, Errorlog> i
 	ErrorlogMapper logMapper;
 	
 	@Override
-	public Errorlog getById(int id)
-    {
+	public Errorlog getById(int id) {
         return logMapper.selectById(id);
     }
 
 	@Override
-    public List<Errorlog> getPage(String beginDate, String endDate, int startIndex, int pageSize)
-    {
+    public List<Errorlog> getPage(String beginDate, String endDate, int startIndex, int pageSize) {
         return logMapper.selectPage(beginDate, endDate, startIndex, pageSize);
     }
     
 	@Override
-    public int getCount(String beginDate, String endDate)
-    {
+    public int getCount(String beginDate, String endDate) {
         return logMapper.selectCount(beginDate, endDate);
     }
 
 	@Override
-    public int insert(Errorlog entity)
-    {
+    public int insert(Errorlog entity) {
         return logMapper.insert(entity);
     }
 }

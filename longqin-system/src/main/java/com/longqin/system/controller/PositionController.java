@@ -51,7 +51,7 @@ public class PositionController {
 	})
 	@GetMapping("/getPositionList")
 	@RequiredPermission("position:view")
-	public ResponseData getPositionList(){
+	public ResponseData getPositionList() {
 		List<Position> positionList = positionService.getPositionList(SessionUtil.getSessionUser().getOrganizationId());
 		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", positionList);
 	}
@@ -67,7 +67,7 @@ public class PositionController {
 	    @ApiResponse(code = 0, message="查询失败")
 	})
 	@GetMapping("/getPositionTree")
-	public ResponseData getPositionTree(){
+	public ResponseData getPositionTree() {
 		List<Map<String, Object>> positionTree = positionService.getPositionTree(SessionUtil.getSessionUser().getOrganizationId());
 		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", positionTree);
 	}
@@ -79,7 +79,7 @@ public class PositionController {
 	 */
 	@ApiOperation(value = "添加职位", httpMethod = "POST")
     @ApiImplicitParams({
-    	@ApiImplicitParam(name = "position", value = "职位实体", dataType = "Position")
+    	@ApiImplicitParam(name = "position", value = "职位实体", required = true, dataType = "Position")
     })
 	@ApiResponses({
 	    @ApiResponse(code = 1, message="添加成功"),
@@ -88,20 +88,19 @@ public class PositionController {
 	})
 	@PostMapping("/create")
 	@RequiredPermission("position:view")
-	public ResponseData create(Position position) throws Exception{
-		if (null == position){
+	public ResponseData create(Position position) throws Exception {
+		if (null == position) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
 		position.setCreator(SessionUtil.getSessionUser().getUserId());
-		if (null == position.getOrganizationId())
-        {
+		if (null == position.getOrganizationId()) {
 			position.setOrganizationId(SessionUtil.getSessionUser().getOrganizationId());
         }
 		int result = positionService.addPosition(position);
-		if (result > 0){
+		if (result > 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "添加成功", result);
 		}
-		else{
+		else {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "添加失败", result);
 		}
 	}
@@ -113,7 +112,7 @@ public class PositionController {
 	 */
 	@ApiOperation(value = "修改职位", httpMethod = "POST")
     @ApiImplicitParams({
-    	@ApiImplicitParam(name = "position", value = "职位实体", dataType = "Position")
+    	@ApiImplicitParam(name = "position", value = "职位实体", required = true, dataType = "Position")
     })
 	@ApiResponses({
 	    @ApiResponse(code = 1, message="修改成功"),
@@ -122,15 +121,15 @@ public class PositionController {
 	})
 	@PostMapping("/update")
 	@RequiredPermission("position:view")
-	public ResponseData update(Position position) throws Exception{
-		if (null == position){
+	public ResponseData update(Position position) throws Exception {
+		if (null == position) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
 		int result = positionService.editPosition(position);
-		if (result > 0){
+		if (result > 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "修改成功", result);
 		}
-		else{
+		else {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "修改失败", result);
 		}
 	}
@@ -142,7 +141,7 @@ public class PositionController {
 	 */
 	@ApiOperation(value = "删除职位", httpMethod = "POST")
     @ApiImplicitParams({
-    	@ApiImplicitParam(name = "positionId", value = "职位ID", dataType = "int")
+    	@ApiImplicitParam(name = "positionId", value = "职位ID", required = true, dataType = "int")
     })
 	@ApiResponses({
 	    @ApiResponse(code = 1, message="删除成功"),
@@ -150,15 +149,15 @@ public class PositionController {
 	})
 	@PostMapping("/delete")
 	@RequiredPermission("position:view")
-	public ResponseData delete(int positionId) throws Exception{
+	public ResponseData delete(int positionId) throws Exception {
 		int result = positionService.deletePosition(positionId);
-		if (result >= 0){
+		if (result >= 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "删除成功", result);
 		}
-		else if (result == -1){
+		else if (result == -1) {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "存在子职位，请先删除子职位", result);
 		}
-		else{
+		else {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "删除失败", result);
 		}
 	}
