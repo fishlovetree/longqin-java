@@ -170,4 +170,27 @@ public class MenuController {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "删除失败", result);
 		}
 	}
+	
+	/**
+	 * @Description bus调用生成菜单
+	 * @Author longqin
+	 * @Time: 2023年11月28日
+	 */
+	@PostMapping("/diyTableMenu")
+	public ResponseData diyTableMenu(String menuName, String menuUrl, Integer groupSeq, boolean isEdit) throws Exception {
+		Menu menu = new Menu();
+        menu.setMenuName(menuName);
+        menu.setParentId(23); // 父级为自定义列表
+        menu.setMenuUrl(menuUrl);
+        menu.setGroupSeq(groupSeq);
+        menu.setCreator(SessionUtil.getSessionUser().getUserId());
+        menu.setOrganizationId(SessionUtil.getSessionUser().getOrganizationId());
+		int result = menuService.diyTableMenu(menu, isEdit);
+		if (result > 0) {
+			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "生成成功", result);
+		}
+		else {
+			return new ResponseData(ResponseEnum.ERROR.getCode(), "生成失败", result);
+		}
+	}
 }

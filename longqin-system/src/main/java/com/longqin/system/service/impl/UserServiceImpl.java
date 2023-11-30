@@ -140,60 +140,65 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             }
             else {
                 // 只指定了职位,根据用户所属部门向上逐级查找
-                getUserByPosition(positionId, submitter.getDepartmentId(), handlers);
+            	handlers = getUserByPosition(positionId, submitter.getDepartmentId());
             }
         }
         else if (departmentId != null && departmentId != 0) {
             // 只指定了部门,根据用户职位向上逐级查找
-            getUserByDepartment(submitter.getPositionId(), departmentId, handlers);
+        	handlers = getUserByDepartment(submitter.getPositionId(), departmentId);
         }
         else {
             // 啥都没指定
-            getUserRecursion(submitter.getPositionId(), submitter.getDepartmentId(), handlers);
+        	handlers = getUserRecursion(submitter.getPositionId(), submitter.getDepartmentId());
         }
         return handlers;
     }
 
     // 指定职位，根据用户所属部门向上逐级查找
-    private void getUserByPosition(int positionId, int departmentId, List<Integer> handlers) {
-        handlers = userMapper.selectUserIdByDeptAndPosition(departmentId, positionId);
+    private List<Integer> getUserByPosition(int positionId, int departmentId) {
+    	List<Integer> handlers = userMapper.selectUserIdByDeptAndPosition(departmentId, positionId);
         if (handlers == null || handlers.size() == 0) {
             Department dept = departmentMapper.selectById(departmentId);
             int parentId = dept.getParentId();
             if (parentId != -1) {
                 // 递归获取处理人
-                getUserByPosition(positionId, parentId, handlers);
+            	handlers = getUserByPosition(positionId, parentId);
             }
         }
+        return handlers;
     }
 
     // 指定部门，根据用户所属职位向上逐级查找
-    private void getUserByDepartment(int positionId, int departmentId, List<Integer> handlers) {
+    private List<Integer> getUserByDepartment(int positionId, int departmentId) {
+    	List<Integer> handlers = new ArrayList<>();
         Position position = positionMapper.selectById(positionId);
         int parentId = position.getParentId();
         if (parentId != -1) {
-            handlers = userMapper.selectUserIdByDeptAndPosition(departmentId, positionId);
+        	handlers = userMapper.selectUserIdByDeptAndPosition(departmentId, parentId);
             if (handlers == null || handlers.size() == 0) {
                 // 递归获取处理人
-                getUserByDepartment(parentId, departmentId, handlers);
+            	handlers = getUserByDepartment(parentId, departmentId);
             }
         }
+        return handlers;
     }
 
     // 未指定部门和职位，根据用户所属职位和部门向上逐级查找
-    private void getUserRecursion(int positionId, int departmentId, List<Integer> handlers) {
+    private List<Integer> getUserRecursion(int positionId, int departmentId) {
+    	List<Integer> handlers = new ArrayList<>();
         Position position = positionMapper.selectById(positionId);
         if (position != null && position.getParentId() != -1) {
             int parentId = position.getParentId();
-            handlers = userMapper.selectUserIdByDeptAndPosition(departmentId, positionId);
+            handlers = userMapper.selectUserIdByDeptAndPosition(departmentId, parentId);
             if (handlers == null || handlers.size() == 0) {
                 // 递归部门获取处理人
-                getUserByPosition(parentId, departmentId, handlers);
+            	handlers = getUserByPosition(parentId, departmentId);
                 if (handlers == null || handlers.size() == 0) {
                     // 递归职位和部门获取处理人
-                    getUserRecursion(parentId, departmentId, handlers);
+                	handlers = getUserRecursion(parentId, departmentId);
                 }
             }
         }
+        return handlers;
     }
 }

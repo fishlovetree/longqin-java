@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,8 +49,8 @@ public class LogController {
 	@ApiOperation(value = "分页获取日志", httpMethod = "GET")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "beginDate", value = "检索条件：开始日期", dataType = "String"), 
 		@ApiImplicitParam(name = "endDate", value = "检索条件：结束日期", dataType = "String"),
-		@ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "Integer"),
-		@ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "Integer") })
+		@ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "int"),
+		@ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "int") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败"), @ApiResponse(code = 3, message = "参数错误") })
 	@GetMapping("/getLogPage")
 	@RequiredPermission("log:view")
@@ -71,7 +72,7 @@ public class LogController {
 	 * @Time: 2023年10月22日
 	 */
 	@PostMapping("/addLog")
-	public ResponseData addLog(Log log) throws Exception {
+	public ResponseData addLog(@RequestBody Log log) throws Exception {
 		int result = logService.insert(log);
 		if (result > 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "记录成功", result);

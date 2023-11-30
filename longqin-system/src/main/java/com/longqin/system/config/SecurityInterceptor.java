@@ -1,6 +1,7 @@
 package com.longqin.system.config;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +26,16 @@ public class SecurityInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		// 用于其他微服务远程调用
+		String serviceKey = (String) request.getHeader("servie-key");
+		if (null != serviceKey && serviceKey.equals("longqin-business")) {// 服务端请求
+			String uri = (String) request.getHeader("request-uri");// 请求的权限
+			List<Menu> menus = new LinkedList<Menu>();
+			Menu menu = new Menu();
+			menu.setMenuUrl(uri);
+			menus.add(menu);
+			return this.hasPermission(handler, menus);
+		}
 		HttpSession session = request.getSession();
 		String json = (String) session.getAttribute("longqin-admin");
 		User user = JSON.parseObject(json, User.class);

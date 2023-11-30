@@ -25,7 +25,7 @@ public interface MenuMapper extends BaseMapper<Menu> {
     
     int updateStatus(Integer menuId);
     
-    int updateByUrl(@Param(value="record")Menu record);
+    int updateByUrl(@Param(value="menuName")String menuName, @Param(value="menuUrl") String menuUrl);
     
     List<Menu> selectUserMenuList(@Param(value="userId")Integer userId, @Param(value="organizationId") Integer organizationId);
     

@@ -49,7 +49,7 @@ public class NoticeController {
 	 * @Time: 2023年10月22日
 	 */
 	@ApiOperation(value = "获取单条公告", httpMethod = "GET")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "noticeId", value = "公告ID", required = true, dataType = "Integer") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "noticeId", value = "公告ID", required = true, dataType = "int") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败") })
 	@GetMapping("/getNoticeById")
 	@RequiredPermission("notice:view")
@@ -67,8 +67,8 @@ public class NoticeController {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "title", value = "检索条件：标题", dataType = "String"), 
 		@ApiImplicitParam(name = "beginDate", value = "检索条件：开始时间", dataType = "String"),
 		@ApiImplicitParam(name = "endDate", value = "检索条件：结束时间", dataType = "String"),
-		@ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "Integer"),
-		@ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "Integer") })
+		@ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "int"),
+		@ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "int") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败"), @ApiResponse(code = 3, message = "参数错误") })
 	@GetMapping("/getNoticePage")
 	@RequiredPermission("notice:view")

@@ -86,8 +86,8 @@ public class UserController {
 	@ApiOperation(value = "分页获取账号", httpMethod = "GET")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "departmentId", value = "检索条件：部门ID", required = false, dataType = "String"), 
 		@ApiImplicitParam(name = "nickName", value = "检索条件：昵称", required = false, dataType = "String"),
-		@ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "Integer"),
-		@ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "Integer") })
+		@ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "int"),
+		@ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "int") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败"), @ApiResponse(code = 3, message = "参数错误") })
 	@GetMapping("/getUserPage")
 	@RequiredPermission("user:view")
@@ -323,7 +323,7 @@ public class UserController {
 	 * @Time: 2023年11月03日
 	 */
 	@ApiOperation(value = "获取用户职级", httpMethod = "GET")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "userId", value = "账号ID", required = true, dataType = "Integer") })
+	@ApiImplicitParams({ @ApiImplicitParam(name = "userId", value = "账号ID", required = true, dataType = "int") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败"),
 		@ApiResponse(code = 3, message = "参数错误")})
 	@GetMapping("/getUserPositionLevel")
@@ -341,10 +341,10 @@ public class UserController {
 	 * @Time: 2023年11月03日
 	 */
 	@ApiOperation(value = "获取流程处理人", httpMethod = "GET")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "userId", value = "流程节点处理人ID", dataType = "Integer"),
-		@ApiImplicitParam(name = "departmentId", value = "流程节点处理部门ID", dataType = "Integer"),
-		@ApiImplicitParam(name = "positionId", value = "流程节点处理职位ID", dataType = "Integer"),
-		@ApiImplicitParam(name = "submitterId", value = "流程提交人ID", required = true, dataType = "Integer")})
+	@ApiImplicitParams({ @ApiImplicitParam(name = "userId", value = "流程节点处理人ID", dataType = "int"),
+		@ApiImplicitParam(name = "departmentId", value = "流程节点处理部门ID", dataType = "int"),
+		@ApiImplicitParam(name = "positionId", value = "流程节点处理职位ID", dataType = "int"),
+		@ApiImplicitParam(name = "submitterId", value = "流程提交人ID", required = true, dataType = "int")})
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败"),
 		@ApiResponse(code = 3, message = "参数错误")})
 	@GetMapping("/getFlowHandlers")

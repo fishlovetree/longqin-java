@@ -117,4 +117,15 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 		}
 		return menuMapper.updateStatus(menuId);
 	}
+	
+	@OperationLog(title = "自定义表单生成菜单", content = "'菜单名称：' + #menu.getMenuName()", operationType = "7")
+	@Override
+	public int diyTableMenu(Menu menu, boolean isEdit) throws Exception {
+		if (isEdit){ // 根据url修改
+			return menuMapper.updateByUrl(menu.getMenuName(), menu.getMenuUrl());
+		}
+		else{ // 新增
+			return menuMapper.insert(menu);
+		}
+	}
 }

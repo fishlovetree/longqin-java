@@ -62,8 +62,8 @@ public class OrganizationController {
 	 */
 	@ApiOperation(value = "分页获取公司", httpMethod = "GET")
 	@ApiImplicitParams({ 
-		@ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "Integer"),
-		@ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "Integer") })
+		@ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "int"),
+		@ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "int") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败"), @ApiResponse(code = 3, message = "参数错误") })
 	@GetMapping("/getOrganizationPage")
 	@RequiredPermission("organization:view")

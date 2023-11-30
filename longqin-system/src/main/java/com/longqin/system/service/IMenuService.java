@@ -30,4 +30,6 @@ public interface IMenuService extends IService<Menu> {
 	int editMenu(Menu menu) throws Exception;
 
 	int deleteMenu(Integer menuId) throws Exception;
+	
+	int diyTableMenu(Menu menu, boolean isEdit) throws Exception;
 }

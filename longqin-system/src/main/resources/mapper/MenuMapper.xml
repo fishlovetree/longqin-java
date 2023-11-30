@@ -35,7 +35,7 @@
 	    update sys_menu set status = 0 where menu_id = #{menuId,jdbcType=INTEGER}
 	</update>
 
-    <update id="updateByUrl" parameterType="com.longqin.system.entity.Menu" >
+    <update id="updateByUrl" >
 	    update sys_menu set menu_name = #{menuName,jdbcType=VARCHAR} where menu_url = #{menuUrl,jdbcType=VARCHAR}
 	</update>
 	
