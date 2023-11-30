@@ -1,0 +1,52 @@
+server:
+  port: 9162
+  
+spring:
+  profiles:
+    active: dev
+  session:
+    store-type: redis
+    timeout: 10800
+    redis:
+      namespace: longqin
+  application:
+    name: longqin-business
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
+  resources:
+    static-locations: classpath:static/,file:static/
+    
+mybatis:
+  mapper-locations:
+  - classpath:mapper/*Mapper.xml
+  type-aliases-package: com.longqin.business.model
+    
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9160/eureka/  # 服务中心地址
+      
+feign:
+  httpclient:
+    connection-timeout: 30000
+  hystrix: 
+    enabled: true
+    
+ribbon:
+  ReadTimeout: 5000
+  SocketTimeout: 5000
+  
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 12000

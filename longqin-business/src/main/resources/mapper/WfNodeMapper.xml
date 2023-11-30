@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longqin.business.mapper.WfNodeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.longqin.business.entity.WfNode">
+        <id column="node_id" property="nodeId" />
+        <result column="node_name" property="nodeName" />
+        <result column="node_type" property="nodeType" />
+        <result column="group_seq" property="groupSeq" />
+        <result column="form_id" property="formId" />
+        <result column="virtual" property="virtual" />
+        <result column="cooperation" property="cooperation" />
+        <result column="department_id" property="departmentId" />
+        <result column="position_x" property="positionX" />
+        <result column="position_y" property="positionY" />
+        <result column="position_id" property="positionId" />
+        <result column="user_id" property="userId" />
+        <result column="is_approval" property="isApproval" />
+        <result column="flow_id" property="flowId" />
+        <result column="description" property="description" />
+        <result column="creator" property="creator" />
+        <result column="create_time" property="createTime" />
+        <result column="organization_id" property="organizationId" />
+        <result column="status" property="status" />
+        
+        <result column="form_name" property="formName" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        node_id, node_name, node_type, group_seq, form_id, virtual, cooperation, department_id, position_x, position_y, 
+        position_id, user_id, is_approval, flow_id, description, creator, create_time, organization_id, status, form_name
+    </sql>
+    
+    <update id="deleteByFlow">
+        update wf_node set status = 0 where flow_id = #{flowId}
+    </update>
+    
+    <select id="selectFlowNodes" resultMap="BaseResultMap">
+        select * from wf_node where flow_id = #{flowId} and status = 1
+    </select>
+    
+    <select id="selectFlowBeginNode" resultMap="BaseResultMap">
+        select s.* from wf_node s where s.flow_id = #{flowId} and s.status = 1 and s.group_seq = 1
+    </select>
+    
+    <select id="selectFlowBeginNodeForm" resultType="com.longqin.business.entity.DesForm">
+        select d.* from wf_node s left join des_form d on d.id = s.form_id 
+        where s.flow_id = #{flowId} and s.status = 1 and s.group_seq = 1
+    </select>
+
+</mapper>

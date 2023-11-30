@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longqin.business.mapper.DiyTableMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.longqin.business.entity.DiyTable">
+        <id column="id" property="id" />
+        <result column="table_name" property="tableName" />
+        <result column="data_source" property="dataSource" />
+        <result column="creator" property="creator" />
+        <result column="create_time" property="createTime" />
+        <result column="organization_id" property="organizationId" />
+        <result column="status" property="status" />
+        
+        <result column="form_name" property="formName" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, table_name, data_source, creator, create_time, organization_id, status
+    </sql>
+    
+    <select id="selectPage" resultMap="BaseResultMap">
+        select d.*, f.form_name from diy_table d
+        left join des_form f on f.table_name = d.data_source
+        where d.status = 1
+        <if test="organizationId != 0">
+	        and d.organization_id = #{organizationId,jdbcType=INTEGER}
+	    </if>
+	    order by d.id desc
+        limit #{startIndex,jdbcType=DECIMAL}, #{size,jdbcType=DECIMAL}
+    </select>
+    
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(0) from diy_table d
+        where d.status = 1
+        <if test="organizationId != 0">
+	        and d.organization_id = #{organizationId,jdbcType=INTEGER}
+	    </if>
+    </select>
+    
+    <update id="delete">
+        update diy_table set status = 0 where id = #{id}
+    </update>
+    
+    <select id="selectTableData" resultType="java.util.HashMap">
+        ${dataSql}
+    </select>
+    
+    <select id="selectTableDataCount" resultType="java.lang.Integer">
+        ${countSql}
+    </select>
+
+</mapper>

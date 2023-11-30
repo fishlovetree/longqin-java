@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longqin.business.mapper.WfWorkMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.longqin.business.entity.WfWork">
+        <id column="work_id" property="workId" />
+        <result column="flow_id" property="flowId" />
+        <result column="creator" property="creator" />
+        <result column="create_time" property="createTime" />
+        <result column="organization_id" property="organizationId" />
+        <result column="status" property="status" />
+        <result column="close_time" property="closeTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        work_id, flow_id, creator, create_time, organization_id, status, close_time
+    </sql>
+    
+    <update id="closeWork">
+        update wf_work set status = 0, close_time = now() where work_id = #{workId}
+    </update>
+    
+    <update id="disableWork">
+        update wf_work set status = 9 where work_id = #{workId}
+    </update>
+
+</mapper>

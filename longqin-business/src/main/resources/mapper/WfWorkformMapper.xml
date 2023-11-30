@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longqin.business.mapper.WfWorkformMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.longqin.business.entity.WfWorkform">
+        <id column="id" property="id" />
+        <result column="work_id" property="workId" />
+        <result column="node_id" property="nodeId" />
+        <result column="process_id" property="processId" />
+        <result column="form_data_id" property="formDataId" />
+        <result column="table_name" property="tableName" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, work_id, node_id, process_id, form_data_id, table_name
+    </sql>
+    
+    <select id="selectByProcessId" resultMap="BaseResultMap">
+        select * from wf_workform where process_id = #{processId}
+    </select>
+    
+    <select id="selectWorkFormList" resultType="com.longqin.business.entity.WfWorkform">
+        select p.process_id, t.submit_time as submitTime, t.submitter, d.* from wf_process p 
+        left join wf_node s on s.node_id= p.node_id 
+        left join des_form d on d.id = s.form_id
+        left join wf_workform w on w.process_id = p.process_id 
+        left join wf_step t on t.process_id = p.process_id
+        where p.work_id = #{workId} and p.status = 0 and w.id is not null
+    </select>
+    
+    <select id="selectTableDatas" resultType="java.util.HashMap">
+        select s.* from ${tableName} s left join wf_workform f on f.form_data_id = s.id 
+        where f.process_id = ${processId} and f.table_name = '${tableName}' order by s.id desc limit 1
+    </select>
+
+</mapper>

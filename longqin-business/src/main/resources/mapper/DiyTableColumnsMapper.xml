@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longqin.business.mapper.DiyTableColumnsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.longqin.business.entity.DiyTableColumns">
+        <result column="table_id" property="tableId" />
+        <result column="table_column" property="tableColumn" />
+        <result column="column_name" property="columnName" />
+        <result column="column_index" property="columnIndex" />
+        <result column="width" property="width" />
+        <result column="order_by" property="orderBy" />
+        <result column="seearch_type" property="seearchType" />
+        <result column="formula" property="formula" />
+        <result column="formula_value" property="formulaValue" />
+        <result column="column_type" property="columnType" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        table_id, table_column, column_name, column_index, width, order_by, seearch_type, formula, formula_value, column_type
+    </sql>
+    
+    <select id="selectTableColumns" resultMap="BaseResultMap">
+        select * from diy_table_columns where table_id = #{tableId}
+    </select>
+    
+    <delete id="deleteTableColumns">
+        delete from diy_table_columns where table_id = #{tableId}
+    </delete>
+
+</mapper>

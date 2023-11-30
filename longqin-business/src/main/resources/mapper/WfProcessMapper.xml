@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longqin.business.mapper.WfProcessMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.longqin.business.entity.WfProcess">
+        <id column="process_id" property="processId" />
+        <result column="work_id" property="workId" />
+        <result column="node_id" property="nodeId" />
+        <result column="link_id" property="linkId" />
+        <result column="sending_to" property="sendingTo" />
+        <result column="process_type" property="processType" />
+        <result column="flag" property="flag" />
+        <result column="submitter" property="submitter" />
+        <result column="submit_time" property="submitTime" />
+        <result column="organization_id" property="organizationId" />
+        <result column="status" property="status" />
+        
+        <result column="flow_id" property="flowId" />
+        <result column="form_data_id" property="formDataId" />
+        <result column="flow_name" property="flowName" />
+        <result column="node_name" property="nodeName" />
+        <result column="creator" property="creator" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        process_id, work_id, node_id, link_id, sending_to, process_type, flag, submitter, submit_time, organization_id, status
+    </sql>
+    
+    <select id="selectNodeFirstProcess" resultMap="BaseResultMap">
+        select * from wf_process where work_id = #{workId} and nodeId = #{nodeId} order by processId desc limit 1
+    </select>
+    
+    <select id="selectProcessById" resultMap="BaseResultMap">
+        select p.*, w.form_data_id, k.flow_id from wf_process p 
+        left join wf_workform w on w.process_id = p.process_id 
+        left join wf_work k on k.work_id = p.work_id where p.process_id = #{processId}
+    </select>
+    
+    <select id="selectNodeProcessCount" resultType="java.lang.Integer">
+        select count(0) from wf_process where work_id = #{workId} and status = 1 and node_id = #{nodeId}
+    </select>
+    
+    <select id="selectPreNodeProcessCount" resultType="java.lang.Integer">
+        select count(0) from wf_process where work_id = #{workId} and status = 1 
+        and node_id in (select from_node_id from wf_link where to_node_id = #{nodeId} and status = 1)
+    </select>
+    
+    <update id="closeNodeProcess">
+        update wf_process set status = 0 where status = 1 and work_id = #{workId} and node_id = #{nodeId}
+    </update>
+    
+    <update id="closeProcessById">
+        update wf_process set status = 0 where process_id = #{processId}
+    </update>
+    
+    <update id="disableWorkProcess">
+        update wf_process set status = 9 where work_id = #{workId}
+    </update>
+    
+    <select id="selectPage" resultMap="BaseResultMap">
+        select p.*, n.node_name, n.form_id, w.creator, w.create_time, f.flow_id, f.flow_name from wf_process p
+        left join wf_node n on n.node_id = p.node_id
+        left join wf_work w on w.work_id = p.work_id
+        left join wf_flow f on f.flow_id = w.flow_id
+        where p.sending_to = #{userId} and p.status = #{status}
+        <if test="beginDate != null and beginDate != ''">
+	        and p.submit_time &gt;= #{beginDate}
+	    </if>
+	    <if test="endDate != null and endDate != ''">
+	        and p.submit_time &lt;= #{endDate}
+	    </if>
+	    order by p.process_id desc
+        limit #{startIndex,jdbcType=DECIMAL}, #{size,jdbcType=DECIMAL}
+    </select>
+    
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(0) from wf_process p
+        where p.sending_to = #{userId} and p.status = #{status}
+        <if test="beginDate != null and beginDate != ''">
+	        and p.submit_time &gt;= #{beginDate}
+	    </if>
+	    <if test="endDate != null and endDate != ''">
+	        and p.submit_time &lt;= #{endDate}
+	    </if>
+    </select>
+    
+    <select id="selectProcessForm" resultType="com.longqin.business.entity.DesForm">
+        select d.* from wf_process p left join wf_node s on s.node_id = p.node_id 
+        left join des_form d on d.id = s.form_id where p.process_id = #{processId}
+    </select>
+    
+    <select id="selectProcessFormData" resultType="java.util.HashMap">
+        select s.* from ${tableName} s 
+        left join wf_workform f on f.form_data_id = s.id 
+        where f.process_id = ${processId}
+    </select>
+    
+    <update id="disableProcess">
+        update wf_process set status = 9 where work_id = #{workId}
+    </update>
+
+</mapper>

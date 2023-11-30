@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longqin.business.mapper.WfLinkMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.longqin.business.entity.WfLink">
+        <id column="link_id" property="linkId" />
+        <result column="link_name" property="linkName" />
+        <result column="from_node_id" property="fromNodeId" />
+        <result column="to_node_id" property="toNodeId" />
+        <result column="form_id" property="formId" />
+        <result column="field" property="field" />
+        <result column="operator" property="operator" />
+        <result column="operator_value" property="operatorValue" />
+        <result column="position_x" property="positionX" />
+        <result column="position_y" property="positionY" />
+        <result column="flow_id" property="flowId" />
+        <result column="description" property="description" />
+        <result column="creator" property="creator" />
+        <result column="create_time" property="createTime" />
+        <result column="organization_id" property="organizationId" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        link_id, link_name, from_node_id, to_node_id, form_id, field, operator, operator_value, position_x, position_y, flow_id, description, creator, create_time, organization_id, status
+    </sql>
+    
+    <delete id="deleteByFlow">
+        delete from wf_link where flow_id = #{flowId}
+    </delete>
+    
+    <select id="selectFlowLinks" resultMap="BaseResultMap">
+        select * from wf_link where flow_id = #{flowId} and status = 1
+    </select>
+    
+    <select id="selectNodeLinks" resultMap="BaseResultMap">
+        select * from wf_link where from_node_id = #{nodeId} and status = 1
+    </select>
+
+</mapper>

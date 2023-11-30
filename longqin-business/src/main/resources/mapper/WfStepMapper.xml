@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longqin.business.mapper.WfStepMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.longqin.business.entity.WfStep">
+        <id column="step_id" property="stepId" />
+        <result column="work_id" property="workId" />
+        <result column="node_id" property="nodeId" />
+        <result column="process_id" property="processId" />
+        <result column="action" property="action" />
+        <result column="reason" property="reason" />
+        <result column="submitter" property="submitter" />
+        <result column="submit_time" property="submitTime" />
+        <result column="organization_id" property="organizationId" />
+        
+        <result column="node_name" property="nodeName" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        step_id, work_id, node_id, process_id, action, reason, submitter, submit_time, organization_id
+    </sql>
+    
+    <select id="selectPage" resultType="com.longqin.business.entity.WfStep">
+        select s.*, n.node_name, p.submit_time as beginTime from wf_step s
+        left join wf_node n on n.node_id = s.node_id
+        left join wf_process p on s.process_id = p.process_id
+        where s.work_id = #{workId}
+        order by s.step_id desc
+        limit #{startIndex,jdbcType=DECIMAL}, #{size,jdbcType=DECIMAL}
+    </select>
+    
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(0) from wf_step s where s.work_id = #{workId}
+    </select>
+
+</mapper>

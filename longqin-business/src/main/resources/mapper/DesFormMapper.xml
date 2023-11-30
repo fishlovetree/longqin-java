@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.longqin.business.mapper.DesFormMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.longqin.business.entity.DesForm">
+        <id column="id" property="id" />
+        <result column="json_data" property="jsonData" />
+        <result column="table_name" property="tableName" />
+        <result column="form_name" property="formName" />
+        <result column="is_approval" property="isApproval" />
+        <result column="creator" property="creator" />
+        <result column="create_time" property="createTime" />
+        <result column="organization_id" property="organizationId" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, json_data, table_name, form_name, is_approval, creator, create_time, organization_id, status
+    </sql>
+    
+    <update id="createFormTable">
+        CREATE TABLE `${tableName}`  (
+		  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+		  ${columns}
+		  `creator` int(11) NULL DEFAULT NULL COMMENT '创建人',
+		  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+		  `organization_id` int(11) NULL DEFAULT NULL COMMENT '组织机构ID',
+		  `status` tinyint(4) NULL DEFAULT 1 COMMENT '状态',
+		  PRIMARY KEY (`id`) USING BTREE
+		) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact COMMENT ='${comment}';
+    </update>
+    
+    <select id="selectCountByTableName" resultType="java.lang.Integer">
+        select count(0) from des_form where table_name = '${tableName}' and id != ${id} and status = 1
+    </select>
+    
+    <select id="selectTableCount" resultType="java.lang.Integer">
+        select count(0) from information_schema.tables where table_name = '${tableName}' and table_schema = 'longqin'
+    </select>
+    
+    <update id="renameTable">
+        rename table ${oldName} to ${newName}
+    </update>
+    
+    <update id="deleteForm">
+        update des_form set status = 0 where id = #{id}
+    </update>
+    
+    <select id="selectPage" resultMap="BaseResultMap">
+        select d.* from des_form d
+        where d.status = 1
+        <if test="organizationId != 0">
+	        and d.organization_id = #{organizationId,jdbcType=INTEGER}
+	    </if>
+	    order by d.id desc
+        limit #{startIndex,jdbcType=DECIMAL}, #{size,jdbcType=DECIMAL}
+    </select>
+    
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(0) from des_form d
+        where d.status = 1
+        <if test="organizationId != 0">
+	        and d.organization_id = #{organizationId,jdbcType=INTEGER}
+	    </if>
+    </select>
+    
+    <insert id="insertFormData" parameterType="com.longqin.business.entity.DesFormData" useGeneratedKeys="true" keyProperty="id">
+        insert into `${tableName}` (${columns}) values (${vals})
+    </insert>
+    
+    <update id="updateFormData">
+        update `${tableName}` set ${data} where id = ${id}
+    </update>
+    
+    <select id="selectTableColumns" resultType="com.longqin.business.entity.DesFormColumn">
+        select column_name as columnName, column_type as columnType, is_nullable as isNull, column_comment as description 
+        from information_schema.columns where table_schema = 'longqin' AND table_name = '${tableName}';
+    </select>
+
+</mapper>
