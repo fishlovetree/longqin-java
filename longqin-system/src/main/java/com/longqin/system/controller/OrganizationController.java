@@ -7,16 +7,15 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.longqin.system.config.RequiredPermission;
 import com.longqin.system.entity.Organization;
 import com.longqin.system.service.IOrganizationService;
 import com.longqin.system.util.ResponseData;
 import com.longqin.system.util.ResponseEnum;
-import com.longqin.system.util.UploadUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -90,28 +89,9 @@ public class OrganizationController {
 			@ApiResponse(code = 2, message = "公司已存在"), @ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/create")
 	@RequiredPermission("organization:view")
-	public ResponseData create(Organization organization, MultipartFile file) throws Exception {
+	public ResponseData create(@RequestBody Organization organization) throws Exception {
 		if (null == organization) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
-		}
-		// 上传文件
-		if(null != file) {
-			if(file.getBytes().length > 4 * 1024 * 1024) {//图标需小于4M
-				return new ResponseData(ResponseEnum.ERROR.getCode(), "图标过大");
-			}
-			
-			//判断上传文件格式
-            String fileType = file.getContentType();
-            if (fileType.equals("image/jpeg") || fileType.equals("image/png") || fileType.equals("image/jpeg")) {
-    			String fileName = file.getOriginalFilename();
-    			String logoPath = UploadUtils.coverUpload(file.getInputStream(), fileName);
-    			if(logoPath.equals("")) {
-    				return new ResponseData(ResponseEnum.ERROR.getCode(), "上传LOGO失败", null);
-    			}
-    			else {
-    				organization.setLogoPath(logoPath);
-    			}
-            }
 		}
 		int result = organizationService.insert(organization);
 		if (result > 0) {
@@ -136,28 +116,9 @@ public class OrganizationController {
 			@ApiResponse(code = 2, message = "公司已存在"), @ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/update")
 	@RequiredPermission("organization:view")
-	public ResponseData update(Organization organization, MultipartFile file) throws Exception {
+	public ResponseData update(@RequestBody Organization organization) throws Exception {
 		if (null == organization) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
-		}
-		// 上传文件
-		if(null != file) {
-			if(file.getBytes().length > 4 * 1024 * 1024) {//图标需小于4M
-				return new ResponseData(ResponseEnum.ERROR.getCode(), "图标过大");
-			}
-			
-			//判断上传文件格式
-            String fileType = file.getContentType();
-            if (fileType.equals("image/jpeg") || fileType.equals("image/png") || fileType.equals("image/jpeg")) {
-    			String fileName = file.getOriginalFilename();
-    			String logoPath = UploadUtils.coverUpload(file.getInputStream(), fileName);
-    			if(logoPath.equals("")) {
-    				return new ResponseData(ResponseEnum.ERROR.getCode(), "上传LOGO失败", null);
-    			}
-    			else {
-    				organization.setLogoPath(logoPath);
-    			}
-            }
 		}
 		int result = organizationService.update(organization);
 		if (result > 0) {

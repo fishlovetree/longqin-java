@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -88,12 +89,12 @@ public class PositionController {
 	})
 	@PostMapping("/create")
 	@RequiredPermission("position:view")
-	public ResponseData create(Position position) throws Exception {
+	public ResponseData create(@RequestBody Position position) throws Exception {
 		if (null == position) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
 		position.setCreator(SessionUtil.getSessionUser().getUserId());
-		if (null == position.getOrganizationId()) {
+		if (0 == position.getOrganizationId()) {
 			position.setOrganizationId(SessionUtil.getSessionUser().getOrganizationId());
         }
 		int result = positionService.addPosition(position);
@@ -121,7 +122,7 @@ public class PositionController {
 	})
 	@PostMapping("/update")
 	@RequiredPermission("position:view")
-	public ResponseData update(Position position) throws Exception {
+	public ResponseData update(@RequestBody Position position) throws Exception {
 		if (null == position) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}

@@ -49,13 +49,17 @@ public class PositionServiceImpl extends ServiceImpl<PositionMapper, Position> i
 			Position item = positions.get(i);
 			cmap = setMap(cmap, item);
 			cmap.put("state", "open");// 默认打开
-			cmap.put("children", new ArrayList<Map<String, Object>>());
+			//cmap.put("children", new ArrayList<Map<String, Object>>());
 			map.put(item.getPositionId(), cmap);
 		}
 		// 节点级联关系
 		for (Map.Entry<Integer, Map<String, Object>> entry : map.entrySet()) {
 			if (map.containsKey(entry.getValue().get("parentId"))) {
 				Map<String, Object> parent = map.get(entry.getValue().get("parentId"));
+				Object children = parent.get("children");
+				if (children == null){
+					parent.put("children", new ArrayList<Map<String, Object>>());
+				}
 				((List<Map<String, Object>>) parent.get("children")).add(entry.getValue());
 			} else {
 				result.add(entry.getValue());
@@ -69,7 +73,10 @@ public class PositionServiceImpl extends ServiceImpl<PositionMapper, Position> i
 		map.put("positionId", position.getPositionId());
 		map.put("parentId", position.getParentId());
 		map.put("positionName", position.getPositionName());
-		map.put("text", position.getPositionName());
+		map.put("title", position.getPositionName());
+		map.put("positionLevel", position.getPositionLevel());
+		map.put("description", position.getDescription());
+		map.put("organizationId", position.getOrganizationId());
 		return map;
 	}
 

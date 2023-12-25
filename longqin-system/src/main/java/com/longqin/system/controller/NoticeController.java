@@ -1,6 +1,5 @@
 package com.longqin.system.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,9 +7,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.longqin.system.config.RequiredPermission;
 import com.longqin.system.entity.Notice;
@@ -18,7 +17,6 @@ import com.longqin.system.service.INoticeService;
 import com.longqin.system.util.ResponseData;
 import com.longqin.system.util.ResponseEnum;
 import com.longqin.system.util.SessionUtil;
-import com.longqin.system.util.UploadUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -96,21 +94,9 @@ public class NoticeController {
 			@ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/create")
 	@RequiredPermission("notice:view")
-	public ResponseData create(Notice notice, MultipartFile[] files) throws Exception {
+	public ResponseData create(@RequestBody Notice notice) throws Exception {
 		if (null == notice) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
-		}
-		// 上传文件
-		List<String> filePaths = new ArrayList<String>();
-		if(null != files) {
-			for(int i = 0; i < files.length; i++) {
-				MultipartFile file = files[i];
-				String fileName = file.getOriginalFilename();
-    			String filePath = UploadUtils.coverUpload(file.getInputStream(), fileName);
-    			if(!filePath.equals("")) {
-    				filePaths.add(filePath);
-    			}
-			}
 		}
 		notice.setCreator(SessionUtil.getSessionUser().getUserId());
 		if (null == notice.getOrganizationId()) {
@@ -118,7 +104,6 @@ public class NoticeController {
         }
 		int noticeId = noticeService.insert(notice);
 		if (noticeId > 0) {
-			noticeService.setNoticeFiles(noticeId, String.join(",", filePaths));
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "添加成功", noticeId);
 		}
 		else {
@@ -138,25 +123,12 @@ public class NoticeController {
 			@ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/update")
 	@RequiredPermission("notice:view")
-	public ResponseData update(Notice notice, MultipartFile[] files) throws Exception {
+	public ResponseData update(@RequestBody Notice notice) throws Exception {
 		if (null == notice) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
-		// 上传文件
-		List<String> filePaths = new ArrayList<String>();
-		if(null != files) {
-			for(int i = 0; i < files.length; i++) {
-				MultipartFile file = files[i];
-				String fileName = file.getOriginalFilename();
-    			String filePath = UploadUtils.coverUpload(file.getInputStream(), fileName);
-    			if(!filePath.equals("")) {
-    				filePaths.add(filePath);
-    			}
-			}
-		}
 		int result = noticeService.update(notice);
 		if (result > 0) {
-			noticeService.setNoticeFiles(notice.getNoticeId(), String.join(",", filePaths));
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "修改成功", result);
 		}
 		else {
@@ -181,38 +153,6 @@ public class NoticeController {
 		}
 		else {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "删除失败", result);
-		}
-	}
-	
-	/**
-	 * @Description 附件上传
-	 * @Author longqin
-	 * @Time: 2023年10月22日
-	 */
-	@ApiOperation(value = "附件上传", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "files", value = "附件", required = true, dataType = "MultipartFile[]") })
-	@ApiResponses({ @ApiResponse(code = 1, message = "上传成功"), @ApiResponse(code = 0, message = "上传失败"),
-		@ApiResponse(code = 3, message = "参数错误")  })
-	@PostMapping("/uploadFiles")
-	@RequiredPermission("notice:view")
-	public ResponseData uploadFiles(MultipartFile[] files) throws Exception {
-		if (null == files || files.length == 0) {
-			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
-		}
-		List<String> filePaths = new ArrayList<String>();
-		for(int i = 0; i < files.length; i++) {
-			MultipartFile file = files[i];
-			String fileName = file.getOriginalFilename();
-			String filePath = UploadUtils.coverUpload(file.getInputStream(), fileName);
-			if(!filePath.equals("")) {
-				filePaths.add(filePath);
-			}
-		}
-		if (filePaths.size() > 0) {
-			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "上传成功", filePaths);
-		}
-		else {
-			return new ResponseData(ResponseEnum.ERROR.getCode(), "上传失败", filePaths);
 		}
 	}
 }

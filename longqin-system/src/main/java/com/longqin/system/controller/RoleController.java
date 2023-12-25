@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -62,12 +63,12 @@ public class RoleController {
 			 @ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/create")
 	@RequiredPermission("role:view")
-	public ResponseData create(Role role) throws Exception {
+	public ResponseData create(@RequestBody Role role) throws Exception {
 		if (null == role) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
 		role.setCreator(SessionUtil.getSessionUser().getUserId());
-		if (null == role.getOrganizationId()) {
+		if (0 == role.getOrganizationId()) {
 			role.setOrganizationId(SessionUtil.getSessionUser().getOrganizationId());
         }
 		int result = roleService.insert(role);
@@ -90,7 +91,7 @@ public class RoleController {
 			@ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/update")
 	@RequiredPermission("role:view")
-	public ResponseData update(Role role) throws Exception {
+	public ResponseData update(@RequestBody Role role) throws Exception {
 		if (null == role) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
@@ -155,7 +156,7 @@ public class RoleController {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误", null);
 		}
 		int result = roleService.setMenu(roleId, menuIdStr);
-		if (result > 0) {
+		if (result >= 0) {
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "设置成功", result);
 		}
 		else {

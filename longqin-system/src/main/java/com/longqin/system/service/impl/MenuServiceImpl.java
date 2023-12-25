@@ -60,13 +60,17 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 			Menu item = menus.get(i);
 			cmap = setMap(cmap, item);
 			cmap.put("state", "open");// 默认打开
-			cmap.put("children", new ArrayList<Map<String, Object>>());
+			//cmap.put("children", new ArrayList<Map<String, Object>>());
 			map.put(item.getMenuId(), cmap);
 		}
 		// 节点级联关系
 		for (Map.Entry<Integer, Map<String, Object>> entry : map.entrySet()) {
 			if (map.containsKey(entry.getValue().get("parentId"))) {
 				Map<String, Object> parent = map.get(entry.getValue().get("parentId"));
+				Object children = parent.get("children");
+				if (children == null){
+					parent.put("children", new ArrayList<Map<String, Object>>());
+				}
 				((List<Map<String, Object>>) parent.get("children")).add(entry.getValue());
 			} else {
 				result.add(entry.getValue());
@@ -80,10 +84,10 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 		map.put("menuId", menu.getMenuId()); // id
 		map.put("parentId", menu.getParentId());// 上级菜单id
 		map.put("menuName", menu.getMenuName());// 菜单名称
-		map.put("text", menu.getMenuName());// 菜单名称
+		map.put("title", menu.getMenuName());// 菜单名称
 		map.put("menuUrl", menu.getMenuUrl());// 菜单链接
 		map.put("menuIcon", menu.getMenuIcon());// 菜单图标
-		map.put("menuOrder", menu.getGroupSeq());// 菜单排序
+		map.put("groupSeq", menu.getGroupSeq());// 菜单排序
 		return map;
 	}
 

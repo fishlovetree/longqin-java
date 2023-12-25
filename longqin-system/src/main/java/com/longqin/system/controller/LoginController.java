@@ -9,10 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.longqin.system.entity.Login;
 import com.longqin.system.entity.Menu;
 import com.longqin.system.entity.User;
 import com.longqin.system.service.IMenuService;
@@ -70,16 +71,16 @@ public class LoginController {
 	})
     @PostMapping("/login")
     @OperationLog(title = "账号登录", content = "'账号：' + {#userName} ", operationType = "5")
-    public ResponseData login(@RequestParam("userName") String userName, @RequestParam("password") String password) throws Exception {
-    	if (null == userName || null == password) {
+    public ResponseData login(@RequestBody Login entity) throws Exception {
+    	if (null == entity.getUserName() || null == entity.getPassword()) {
     		return new ResponseData(ResponseEnum.BADPARAM.getCode(), "用户名和密码不能为空");
     	}
-        User user = userService.getByName(userName);
+        User user = userService.getByName(entity.getUserName());
         if (null == user) {
         	return new ResponseData(ResponseEnum.ERROR.getCode(), "用户名或密码错误");
         }
         
-        if (!user.getPassword().equals(MD5Util.MD5(password))) {
+        if (!user.getPassword().equals(MD5Util.MD5(entity.getPassword()))) {
         	return new ResponseData(2, "用户名或密码错误");
         }
 
@@ -92,6 +93,7 @@ public class LoginController {
 		//获取用户菜单树形结构
 		List<Map<String, Object>> menuTree = menuService.getUserMenuTree(user.getUserId(), user.getOrganizationId());
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user", user);
 		map.put("sessionid", SessionUtil.getSessionId());
 		map.put("menujson", menuTree);
 		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "登录成功", map);

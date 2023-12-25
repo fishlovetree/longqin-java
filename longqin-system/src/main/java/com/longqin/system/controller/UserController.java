@@ -7,9 +7,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.longqin.system.config.RequiredPermission;
 import com.longqin.system.entity.User;
@@ -18,7 +18,6 @@ import com.longqin.system.util.MD5Util;
 import com.longqin.system.util.ResponseData;
 import com.longqin.system.util.ResponseEnum;
 import com.longqin.system.util.SessionUtil;
-import com.longqin.system.util.UploadUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -114,27 +113,9 @@ public class UserController {
 			@ApiResponse(code = 2, message = "账号已存在"), @ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/create")
 	@RequiredPermission("user:view")
-	public ResponseData create(User user, MultipartFile file) throws Exception {
+	public ResponseData create(@RequestBody User user) throws Exception {
 		if (null == user) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
-		}
-		// 上传文件
-		if(null != file){
-			if(file.getBytes().length > 4 * 1024 * 1024){//图标需小于4M
-				return new ResponseData(ResponseEnum.ERROR.getCode(), "图标过大");
-			}
-			
-			//判断上传文件格式
-            String fileType = file.getContentType();
-            if (fileType.equals("image/jpeg") || fileType.equals("image/png") || fileType.equals("image/jpeg")) {
-    			String fileName = file.getOriginalFilename();
-    			String avatarPath = UploadUtils.coverUpload(file.getInputStream(), fileName);
-    			if(avatarPath.equals(""))
-    				return new ResponseData(ResponseEnum.ERROR.getCode(), "上传LOGO失败", null);
-    			else{
-    				user.setAvatar(avatarPath);
-    			}
-            }
 		}
 		if (null == user.getOrganizationId())
         {
@@ -163,27 +144,9 @@ public class UserController {
 			@ApiResponse(code = 2, message = "账号已存在"), @ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/update")
 	@RequiredPermission("user:view")
-	public ResponseData update(User user, MultipartFile file) throws Exception {
+	public ResponseData update(@RequestBody User user) throws Exception {
 		if (null == user) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
-		}
-		// 上传文件
-		if(null != file){
-			if(file.getBytes().length > 4 * 1024 * 1024){//图标需小于4M
-				return new ResponseData(ResponseEnum.ERROR.getCode(), "图标过大");
-			}
-			
-			//判断上传文件格式
-            String fileType = file.getContentType();
-            if (fileType.equals("image/jpeg") || fileType.equals("image/png") || fileType.equals("image/jpeg")) {
-    			String fileName = file.getOriginalFilename();
-    			String avatarPath = UploadUtils.coverUpload(file.getInputStream(), fileName);
-    			if(avatarPath.equals(""))
-    				return new ResponseData(ResponseEnum.ERROR.getCode(), "上传LOGO失败", null);
-    			else{
-    				user.setAvatar(avatarPath);
-    			}
-            }
 		}
 		int result = userService.update(user);
 		if (result > 0){

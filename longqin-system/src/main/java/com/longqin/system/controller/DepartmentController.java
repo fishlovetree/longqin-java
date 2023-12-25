@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -88,12 +89,12 @@ public class DepartmentController {
 	})
 	@PostMapping("/create")
 	@RequiredPermission("department:view")
-	public ResponseData create(Department department) throws Exception {
+	public ResponseData create(@RequestBody Department department) throws Exception {
 		if (null == department) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
 		department.setCreator(SessionUtil.getSessionUser().getUserId());
-		if (null == department.getOrganizationId()) {
+		if (0 == department.getOrganizationId()) {
 			department.setOrganizationId(SessionUtil.getSessionUser().getOrganizationId());
         }
 		int result = departmentService.addDepartment(department);
@@ -121,7 +122,7 @@ public class DepartmentController {
 	})
 	@PostMapping("/update")
 	@RequiredPermission("department:view")
-	public ResponseData update(Department department) throws Exception {
+	public ResponseData update(@RequestBody Department department) throws Exception {
 		if (null == department) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}

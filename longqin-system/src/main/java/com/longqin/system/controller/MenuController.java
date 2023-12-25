@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -90,7 +91,7 @@ public class MenuController {
 	})
 	@PostMapping("/create")
 	@RequiredPermission("menu:view")
-	public ResponseData create(Menu menu) throws Exception {
+	public ResponseData create(@RequestBody Menu menu) throws Exception {
 		if (null == menu) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
@@ -127,7 +128,7 @@ public class MenuController {
 	})
 	@PostMapping("/update")
 	@RequiredPermission("menu:view")
-	public ResponseData update(Menu menu) throws Exception {
+	public ResponseData update(@RequestBody Menu menu) throws Exception {
 		if (null == menu) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
@@ -183,6 +184,7 @@ public class MenuController {
         menu.setParentId(23); // 父级为自定义列表
         menu.setMenuUrl(menuUrl);
         menu.setGroupSeq(groupSeq);
+        menu.setMenuIcon("layui-icon-form"); // 默认图标
         menu.setCreator(SessionUtil.getSessionUser().getUserId());
         menu.setOrganizationId(SessionUtil.getSessionUser().getOrganizationId());
 		int result = menuService.diyTableMenu(menu, isEdit);

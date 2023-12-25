@@ -39,6 +39,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		interceptorRegistration.excludePathPatterns("/swagger-resources/**");
 		interceptorRegistration.excludePathPatterns("/v2/**");
 		interceptorRegistration.excludePathPatterns("/**/error");
+		//interceptorRegistration.excludePathPatterns("/uploads/**");
 		// 配置拦截策略
 		interceptorRegistration.addPathPatterns("/**");
 	}
@@ -49,5 +50,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		registry.addResourceHandler("/swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
 
 		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+		
+		String os = System.getProperty("os.name").toLowerCase();
+		String path = null;
+		if (os.contains("windows")) {
+			path = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\uploads\\";
+		}else if (os.contains("linux")) {
+			path = System.getProperty("user.dir") + "/src/main/resources/static/uploads/";
+		}
+		registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+		registry.addResourceHandler("/uploads/**").addResourceLocations("file:" + path);
 	}
 }
