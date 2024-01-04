@@ -117,7 +117,7 @@ public class UserController {
 		if (null == user) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
-		if (null == user.getOrganizationId())
+		if (0 == user.getOrganizationId())
         {
 			user.setOrganizationId(SessionUtil.getSessionUser().getOrganizationId());
         }

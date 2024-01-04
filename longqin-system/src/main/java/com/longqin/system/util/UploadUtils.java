@@ -32,7 +32,8 @@ public class UploadUtils {
            String fileFormat = originalFilename.substring(originalFilename.lastIndexOf("."));
 
            String uuid = UUID.randomUUID().toString().trim().replaceAll("-", "");
-           toFile = new File(targetDirPath + File.separator + uuid + fileFormat);
+           //toFile = new File(targetDirPath + File.separator + uuid + fileFormat);
+           toFile = new File(targetDirPath + File.separator + originalFilename);
 
            String absolutePath = null;
            try {

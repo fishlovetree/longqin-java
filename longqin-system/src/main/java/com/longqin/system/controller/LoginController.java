@@ -70,7 +70,7 @@ public class LoginController {
 	    @ApiResponse(code = 2, message="账号名或密码错误")
 	})
     @PostMapping("/login")
-    @OperationLog(title = "账号登录", content = "'账号：' + {#userName} ", operationType = "5")
+    @OperationLog(title = "账号登录", content = "'账号：' + #entity.getUserName() ", operationType = "5")
     public ResponseData login(@RequestBody Login entity) throws Exception {
     	if (null == entity.getUserName() || null == entity.getPassword()) {
     		return new ResponseData(ResponseEnum.BADPARAM.getCode(), "用户名和密码不能为空");

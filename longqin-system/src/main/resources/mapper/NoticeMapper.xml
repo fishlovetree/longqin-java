@@ -16,6 +16,7 @@
         <result column="attachments" property="attachments" />
         
         <result column="creator_name" property="creatorName" />
+        <result column="department_name" property="departmentName" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -24,10 +25,11 @@
     </sql>
     
     <select id="selectPage" resultMap="BaseResultMap">
-        select s.*, u.nick_name as creator_name
+        select s.*, u.nick_name as creator_name, d.department_name
         from sys_notice s
         left join sys_user u on u.user_id = s.creator
-        where 1 = 1
+        left join sys_department d on d.department_id = u.department_id
+        where s.status = 1
         <if test="organizationId != 0">
 	        and s.organization_id = #{organizationId,jdbcType=INTEGER}
 	    </if>
@@ -46,7 +48,7 @@
     
     <select id="selectCount" resultType="java.lang.Integer">
         select count(0) from sys_notice s
-        where 1 = 1
+        where s.status = 1
         <if test="organizationId != 0">
 	        and s.organization_id = #{organizationId,jdbcType=INTEGER}
 	    </if>

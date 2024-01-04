@@ -62,7 +62,7 @@ public class Notice implements Serializable {
     @TableField("status")
     private Integer status;
 
-    @ApiModelProperty("操作人")
+    @ApiModelProperty("发文人")
     @TableField("creator")
     private Integer creator;
 
@@ -74,7 +74,11 @@ public class Notice implements Serializable {
     @TableField("attachments")
     private String attachments;
 
-    @ApiModelProperty("操作人名称")
+    @ApiModelProperty("发文人名称")
  	@TableField(exist = false)
  	private String creatorName;
+    
+    @ApiModelProperty("发文人部门")
+ 	@TableField(exist = false)
+ 	private String departmentName;
 }
