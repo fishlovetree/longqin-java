@@ -190,33 +190,33 @@ CREATE TABLE `sys_menu`  (
 -- ----------------------------
 -- Records of sys_menu
 -- ----------------------------
-INSERT INTO `sys_menu` VALUES (1, '系统管理', NULL, -1, 5, 'layui-icon-set', NULL, NULL, '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (2, '菜单管理', '/menu/view', 1, 7, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (3, '用户管理', '/user/view', 1, 5, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (4, '公司管理', '/organization/view', 1, 1, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (5, '部门管理', '/department/view', 1, 3, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (6, '角色管理', '/role/view', 1, 2, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (7, '系统日志', '/log/view', 1, 6, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (8, '自定义表单', NULL, -1, 2, 'layui-icon-form', NULL, NULL, '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (9, '表单设计器', '/formdesign/view', 8, 2, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (10, '表单列表', '/formlist/view', 8, 1, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (11, '自定义流程', NULL, -1, 3, 'layui-icon-template-1', NULL, NULL, '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (12, '流程设计器', '/flowdesign/view', 11, 2, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (13, '职位管理', '/position/view', 1, 4, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (14, '流程列表', '/flowlist/view', 11, 1, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (15, '我的工作', NULL, -1, 1, 'layui-icon-app', NULL, NULL, '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (16, '待办工作', '/backlog/view', 15, 1, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (17, '已办工作', '/completed/view', 15, 2, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (18, '主页', NULL, -1, 0, 'layui-icon-home', NULL, NULL, '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (19, '主页', '/home/view', 18, 0, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (20, '系统设置', '/baseset/view', 18, 1, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (21, '流程发起', '/startflow/view', 15, 3, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (22, '公告管理', '/notice/view', 18, 3, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (23, '自定义列表', NULL, -1, 4, 'layui-icon-table', NULL, NULL, '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (24, '列表清单', '/tabledesign/view', 23, 1, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (25, '列表设计器', '/tabledesign/view', 23, 2, NULL, '', '', '2023-09-19 09:51:52', 0, 1, 1);
-INSERT INTO `sys_menu` VALUES (26, '请假列表', '/tabledesigner/tabledesign/customerview/3', 23, 3, NULL, '', '', '2023-09-19 09:51:52', 1, 1, 2);
-INSERT INTO `sys_menu` VALUES (27, '错误日志', '/errorlog/view', -1, 7, NULL, NULL, NULL, '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (1, '系统管理', '/system', -1, 5, 'layui-icon-set', NULL, NULL, '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (2, '菜单管理', '/menu/view', 1, 7, 'layui-icon-spread-left', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (3, '用户管理', '/user/view', 1, 5, 'layui-icon-user', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (4, '公司管理', '/organization/view', 1, 1, 'layui-icon-transfer', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (5, '部门管理', '/department/view', 1, 3, 'layui-icon-transfer', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (6, '角色管理', '/role/view', 1, 2, 'layui-icon-user', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (7, '系统日志', '/log/view', 1, 6, 'layui-icon-survey', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (8, '自定义表单', '/formdesign', -1, 2, 'layui-icon-form', NULL, NULL, '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (9, '表单设计器', '/formdesign/view', 8, 2, 'layui-icon-form', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (10, '表单列表', '/formlist/view', 8, 1, 'layui-icon-form', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (11, '自定义流程', '/flowdesign', -1, 3, 'layui-icon-template-one', NULL, NULL, '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (12, '流程设计器', '/flowdesign/view', 11, 2, 'layui-icon-template-one', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (13, '职位管理', '/position/view', 1, 4, 'layui-icon-user', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (14, '流程列表', '/flowlist/view', 11, 1, 'layui-icon-align-left', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (15, '我的工作', '/work', -1, 1, 'layui-icon-app', NULL, NULL, '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (16, '待办工作', '/backlog/view', 15, 1, 'layui-icon-app', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (17, '已办工作', '/completed/view', 15, 2, 'layui-icon-app', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (18, '工作空间', '/workspace', -1, 0, 'layui-icon-home', NULL, NULL, '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (19, '工作台', '/home/view', 18, 0, 'layui-icon-home', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (20, '系统设置', '/baseset/view', 18, 1, 'layui-icon-set', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (21, '流程发起', '/startflow/view', 15, 3, 'layui-icon-link', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (22, '公告管理', '/notice/view', 18, 3, 'layui-icon-notice', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (23, '自定义列表', '/table', -1, 4, 'layui-icon-table', NULL, NULL, '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (24, '列表清单', '/tablelist/view', 23, 1, 'layui-icon-table', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (25, '列表设计器', '/tabledesign/view', 23, 2, 'layui-icon-table', '', '', '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (27, '错误日志', '/errorlog/view', 1, 7, 'layui-icon-error', NULL, NULL, '2023-09-19 09:51:52', 0, 1, 1);
+INSERT INTO `sys_menu`(`menu_id`, `menu_name`, `menu_url`, `parent_id`, `group_seq`, `menu_icon`, `controller`, `action`, `create_time`, `organization_id`, `status`, `creator`) VALUES (29, '请假列表', '/diytable/view/1', 23, 3, 'layui-icon-form', NULL, NULL, '2023-11-30 16:39:37', 1, 1, 3);
 
 -- ----------------------------
 -- Table structure for sys_notice
@@ -368,8 +368,8 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', '6318625390f7162336878dacf0a2ae49', '超级管理员', '2023-09-19 11:06:47', 1, 'heyunche@sina.com', '13616526044', NULL, 0, 0, NULL, 0);
-INSERT INTO `sys_user` VALUES (2, 'songjiang', 'e10adc3949ba59abbe56e057f20f883e', '宋江', '2023-10-27 14:59:27', 1, NULL, NULL, NULL, 1, 1, '4444', 1);
+INSERT INTO `sys_user` VALUES (1, 'admin', 'e10adc3949ba59abbe56e057f20f883e', '超级管理员', '2023-09-19 11:06:47', 1, 'heyunche@sina.com', '13616526044', NULL, 0, 0, NULL, 0);
+INSERT INTO `sys_user` VALUES (2, 'custom', 'e10adc3949ba59abbe56e057f20f883e', '用户1', '2023-10-27 14:59:27', 1, NULL, NULL, NULL, 1, 1, '4444', 1);
 
 -- ----------------------------
 -- Table structure for sys_userrole
