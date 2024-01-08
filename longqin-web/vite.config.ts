@@ -52,7 +52,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       open: true, 
       proxy: {
         [env.VITE_APP_BASE_API]: {
-          target: 'http://193.168.2.22:9163',  //后端微服务网关ip端口
+          target: 'http://localhost:9163',  //后端微服务网关ip端口
           changeOrigin: true, 
           rewrite: (path) => path.replace(new RegExp("^" + env.VITE_APP_BASE_API), "") // 路径重写
         }

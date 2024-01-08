@@ -100,6 +100,7 @@ import { ref, reactive } from 'vue'
 import { layer } from '@layui/layui-vue'
 import { useUserStore } from '../../../store/user'
 import { roleList, addRole, updateRole, deleteRole, getRoleMenu, updateRoleMenu } from "@/api/module/role";
+import { organizationList } from "@/api/module/organization"
 
 const loading = ref(false)
 const columns = ref([
@@ -152,6 +153,7 @@ const changeVisible = (text: any, row: any) => {
   }
   visible.value = !visible.value
 }
+const organizationItems = ref()
 
 function toRemove(roleId : any) {
   layer.confirm('您将删除所选中的数据？', {
@@ -261,6 +263,17 @@ function handleQuery() {
 }
 onMounted(() => {
 	handleQuery();
+  if (useUserStore().userInfo.organizationId == 0){
+    organizationList()
+      .then((res: any) => {
+        const options = [];
+        for(const r in res.data){
+          const org = res.data[r];
+          options.push({ label: org.organizationName, value: org.organizationId })
+        }
+        organizationItems.value = options;
+      });
+  }
 });
 </script>
 
