@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -87,7 +88,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 			// 账号已存在
 			return -2;
 		}
-    	entity.setPassword(MD5Util.MD5(entity.getUserName()));
+		if (StringUtils.isEmpty(entity.getPassword())){
+    	    entity.setPassword(MD5Util.MD5(entity.getUserName()));
+		}
 
         return userMapper.insert(entity);
     }

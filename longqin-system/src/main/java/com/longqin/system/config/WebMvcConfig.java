@@ -32,6 +32,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		// 排除配置
 		interceptorRegistration.excludePathPatterns("/login");
 		interceptorRegistration.excludePathPatterns("/logout");
+		interceptorRegistration.excludePathPatterns("/sendCode");
+		interceptorRegistration.excludePathPatterns("/register");
 		interceptorRegistration.excludePathPatterns("/notlogon");
 		interceptorRegistration.excludePathPatterns("/unauth");
 		interceptorRegistration.excludePathPatterns("/swagger-ui.html/**");

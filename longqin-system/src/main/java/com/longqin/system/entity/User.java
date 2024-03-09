@@ -110,4 +110,8 @@ public class User implements Serializable {
     @ApiModelProperty("用户菜单")
  	@TableField(exist = false)
     private List<Menu> menuList;
+    
+    @ApiModelProperty("验证码")
+ 	@TableField(exist = false)
+ 	private String verifyCode;
 }
