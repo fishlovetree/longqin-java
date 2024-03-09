@@ -22,12 +22,6 @@ spring:
       max-request-size: 215MB
   resources:
     static-locations: classpath:static/,file:static/
-  mail:
-    host: smtp.qq.com
-    username: 344589313@qq.com # 发件人邮箱
-    nickname: 龙琴科技
-    password: hmwcghzkhyijbjjf # 邮箱授权码
-    default-encoding: UTF-8
     
 mybatis:
   mapper-locations:
