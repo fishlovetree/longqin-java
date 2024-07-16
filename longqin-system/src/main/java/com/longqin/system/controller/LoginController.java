@@ -1,11 +1,16 @@
 package com.longqin.system.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.longqin.system.entity.Login;
 import com.longqin.system.entity.Menu;
 import com.longqin.system.entity.Organization;
@@ -102,11 +108,11 @@ public class LoginController {
     	}
         User user = userService.getByName(entity.getUserName());
         if (null == user) {
-        	return new ResponseData(ResponseEnum.ERROR.getCode(), "用户名或密码错误");
+        	return new ResponseData(ResponseEnum.BADUSERNAME.getCode(), "用户名或密码错误");
         }
         
         if (!user.getPassword().equals(MD5Util.MD5(entity.getPassword()))) {
-        	return new ResponseData(2, "用户名或密码错误");
+        	return new ResponseData(ResponseEnum.ERRORPASSWORD.getCode(), "用户名或密码错误");
         }
 
 		//获取用户菜单用于菜单权限判断
@@ -236,5 +242,27 @@ public class LoginController {
         else {
         	return new ResponseData(ResponseEnum.SUCCESS.getCode(), "注册失败");
         }
+    }
+    
+    @Resource
+	DefaultKaptcha defaultKaptcha;
+
+    /**
+     * 生成验证码
+     */
+    @GetMapping("/captcha")
+    public ResponseData captcha() throws IOException {
+        // 生成文字验证码
+        String text = defaultKaptcha.createText();
+        System.out.println("文字验证码为" + text);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        // 生成图片验证码
+        BufferedImage image = defaultKaptcha.createImage(text);
+        ImageIO.write(image, "jpg", out);
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("captchaKey", MD5Util.MD5(text));
+        data.put("captchaBase64", "data:image/png;base64," + Base64.getEncoder().encodeToString(out.toByteArray()));
+        return new ResponseData(ResponseEnum.SUCCESS.getCode(), "生成成功", data);
     }
 }

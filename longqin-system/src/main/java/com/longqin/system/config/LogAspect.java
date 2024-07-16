@@ -85,6 +85,7 @@ public class LogAspect {
 			Log mLog = new Log();
 			// 从session获取用户
 			User user = SessionUtil.getSessionUser();
+			if (null == user) return;
 			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
 					.getRequestAttributes()).getRequest();
 			// 获取IP

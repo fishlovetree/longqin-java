@@ -261,6 +261,26 @@
 			<version>3.2.0</version>
 		</dependency>
 		
+		<!-- 邮箱 -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		
+		<!-- 一个很强大的工具库 -->
+		<dependency>
+		    <groupId>cn.hutool</groupId>
+		    <artifactId>hutool-all</artifactId>
+		    <version>5.8.19</version>
+		</dependency>
+		
+		<!-- 验证码 -->
+		<dependency>  
+		    <groupId>com.github.penggle</groupId>  
+		    <artifactId>kaptcha</artifactId>  
+		    <version>2.3.2</version>  
+		</dependency>
+		
 	</dependencies>
 	
 	<dependencyManagement>
