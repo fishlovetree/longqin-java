@@ -41,13 +41,18 @@ public class DesFormServiceImpl extends ServiceImpl<DesFormMapper, DesForm> impl
 			// 表名已存在
 			return -2;
 		}
-    	JSONArray jsonArray = JSONArray.parseArray(entity.getJsonData());
+    	JSONObject jsonObj = JSONObject.parseObject(entity.getJsonData());
+    	JSONArray jsonArray = jsonObj.getJSONArray("widgetList");
+    	if (jsonArray == null){
+    		return -1;
+    	}
     	StringBuilder columns = new StringBuilder();
     	for(int i = 0; i < jsonArray.size(); i++){
             JSONObject obj = (JSONObject)jsonArray.get(i);
             String columnType = "";
-            String tag = obj.getString("tag");
-            switch (tag)
+            String type = obj.getString("type");
+            JSONObject options = obj.getJSONObject("options");
+            switch (type)
             {
                 case "input":
                     columnType = "varchar(100)";
@@ -75,10 +80,10 @@ public class DesFormServiceImpl extends ServiceImpl<DesFormMapper, DesForm> impl
                     columnType = "varchar(50)";
                     break;
             }
-            String isNull = "true".equals(obj.getString("required")) ? "NOT NULL" : "NULL DEFAULT NULL";
-            columns.append("`").append(obj.getString("name")).append("` ").append(columnType)
+            String isNull = "true".equals(options.getString("required")) ? "NOT NULL" : "NULL DEFAULT NULL";
+            columns.append("`").append(options.getString("name")).append("` ").append(columnType)
             .append(" CHARACTER SET utf8 COLLATE utf8_general_ci ").append(isNull).append(" COMMENT '")
-            .append(obj.getString("label")).append("',");
+            .append(options.getString("label")).append("',");
     	}
     	int result = desFormMapper.createFormTable(tableName, columns.toString(), entity.getFormName());
     	if (result >= 0){

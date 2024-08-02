@@ -84,7 +84,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 		map.put("menuId", menu.getMenuId()); // id
 		map.put("parentId", menu.getParentId());// 上级菜单id
 		map.put("menuName", menu.getMenuName());// 菜单名称
-		map.put("title", menu.getMenuName());// 菜单名称
 		map.put("menuUrl", menu.getMenuUrl());// 菜单链接
 		map.put("menuIcon", menu.getMenuIcon());// 菜单图标
 		map.put("groupSeq", menu.getGroupSeq());// 菜单排序

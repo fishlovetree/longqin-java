@@ -68,7 +68,7 @@ public class DesFormController {
 		@ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "int") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败"), @ApiResponse(code = 3, message = "参数错误") })
 	@GetMapping("/getFormPage")
-	@RequiredPermission("formlist:view")
+	@RequiredPermission("formList:view")
 	public ResponseData getFormPage(Integer page, Integer size) {
 		if (null == page || null == size) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
@@ -91,7 +91,7 @@ public class DesFormController {
 	@ApiResponses({ @ApiResponse(code = 1, message = "创建成功"), @ApiResponse(code = 0, message = "创建失败"),
 			@ApiResponse(code = 2, message = "表单已存在"), @ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/create")
-	@RequiredPermission("formdesign:view")
+	@RequiredPermission("formDesigner:view")
 	public ResponseData create(@RequestBody DesForm entity) throws Exception {
 		if (null == entity || StringUtils.isEmpty(entity.getTableName()) || StringUtils.isEmpty(entity.getJsonData())) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
@@ -120,7 +120,7 @@ public class DesFormController {
 	@ApiResponses({ @ApiResponse(code = 1, message = "修改成功"), @ApiResponse(code = 0, message = "修改失败"),
 			@ApiResponse(code = 2, message = "表单已存在"), @ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/update")
-	@RequiredPermission("formdesign:view")
+	@RequiredPermission("formDesigner:view")
 	public ResponseData update(@RequestBody DesForm entity) throws Exception {
 		if (null == entity || null == entity.getId() || StringUtils.isEmpty(entity.getTableName()) || StringUtils.isEmpty(entity.getJsonData())) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
@@ -148,7 +148,7 @@ public class DesFormController {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "id", value = "表单ID", required = true, dataType = "int") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "删除成功"), @ApiResponse(code = 0, message = "删除失败") })
 	@PostMapping("/delete")
-	@RequiredPermission("formlist:view")
+	@RequiredPermission("formList:view")
 	public ResponseData delete(int id) throws Exception {
 		int result = desFormService.delete(id);
 		if (result >= 0){
