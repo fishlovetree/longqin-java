@@ -67,7 +67,7 @@ public class WfFlowController {
 		@ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "int") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败"), @ApiResponse(code = 3, message = "参数错误") })
 	@GetMapping("/getFlowPage")
-	@RequiredPermission("flowlist:view")
+	@RequiredPermission("flowList:view")
 	public ResponseData getFlowPage(Integer page, Integer size) {
 		if (null == page || null == size) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
@@ -90,7 +90,7 @@ public class WfFlowController {
 	@ApiResponses({ @ApiResponse(code = 1, message = "保存成功"), @ApiResponse(code = 0, message = "保存失败"),
 			@ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/save")
-	@RequiredPermission("flowdesign:view")
+	@RequiredPermission("flowDesigner:view")
 	public ResponseData save(@RequestBody WfFlow entity) throws Exception {
 		if (null == entity || null == entity.getFlowName() || StringUtils.isEmpty(entity.getNodes()) || StringUtils.isEmpty(entity.getLinks())) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
@@ -129,7 +129,7 @@ public class WfFlowController {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "flowId", value = "流程ID", required = true, dataType = "int") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "删除成功"), @ApiResponse(code = 0, message = "删除失败") })
 	@PostMapping("/delete")
-	@RequiredPermission("flowlist:view")
+	@RequiredPermission("flowList:view")
 	public ResponseData delete(int flowId) throws Exception {
 		int result = wfFlowService.deleteFlow(flowId);
 		if (result >= 0){
