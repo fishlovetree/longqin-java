@@ -114,4 +114,8 @@ public class User implements Serializable {
     @ApiModelProperty("验证码")
  	@TableField(exist = false)
  	private String verifyCode;
+    
+    @ApiModelProperty("账号角色")
+ 	@TableField(exist = false)
+ 	private String roleIds;
 }

@@ -1,8 +1,11 @@
 package com.longqin.system.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.longqin.system.config.RequiredPermission;
 import com.longqin.system.entity.User;
@@ -203,6 +207,34 @@ public class UserController {
 		}
 		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "密码正确");
 	}
+	
+	/**
+	 * @Description 重置密码
+	 * @Author longqin
+	 * @Time: 2024年08月09日
+	 */
+	@ApiOperation(value = "重置密码", httpMethod = "POST")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "userId", value = "账号ID", required = true, dataType = "int"),
+			@ApiImplicitParam(name = "password", value = "新密码", required = true, dataType = "String"), })
+	@ApiResponses({ @ApiResponse(code = 1, message = "修改成功"), @ApiResponse(code = 0, message = "修改失败"),
+			@ApiResponse(code = 3, message = "参数错误") })
+	@PostMapping("/resetPassword")
+	public ResponseData resetPassword(int userId, String password) throws Exception {
+		User user = userService.getById(userId);
+		if (null == user) {
+			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误", null);
+		}
+		
+		if(password == null || password.isEmpty()) password = user.getUserName(); // 默认密码为账户名
+		
+		int result = userService.updatePassword(userId, password);
+		if (result > 0){
+			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "修改成功", result);
+		}
+		else{
+			return new ResponseData(ResponseEnum.ERROR.getCode(), "修改失败", result);
+		}
+	}
 
 	/**
 	 * @Description 修改密码
@@ -279,6 +311,27 @@ public class UserController {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "设置失败", result);
 		}
 	}
+	
+	@ApiOperation(value = "下载用户导入模板", httpMethod = "GET")
+	@GetMapping("/template")
+	@RequiredPermission("user:view")
+    public void downloadTemplate(HttpServletRequest request) throws IOException {
+		userService.exportTemplate(SessionUtil.getSessionUser().getOrganizationId());
+    }
+	
+	@ApiOperation(value = "导入用户", httpMethod = "GET")
+	@RequiredPermission("user:view")
+	@PostMapping("/import")
+    public ResponseData importUsers(MultipartFile file) throws IOException {
+        return userService.importUser(SessionUtil.getSessionUser().getOrganizationId(), file);
+    }
+	
+	@ApiOperation(value = "导出用户", httpMethod = "GET")
+	@GetMapping("/export")
+	@RequiredPermission("user:view")
+    public void export(String departmentId, String nickName) throws IOException {
+		userService.export(SessionUtil.getSessionUser().getOrganizationId(), departmentId, nickName);
+    }
 	
 	/**
 	 * @Description 获取用户职级

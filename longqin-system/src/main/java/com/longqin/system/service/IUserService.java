@@ -1,8 +1,11 @@
 package com.longqin.system.service;
 
 import com.longqin.system.entity.User;
+import com.longqin.system.util.ResponseData;
 
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -37,6 +40,12 @@ public interface IUserService extends IService<User> {
     List<Integer> getRoles(int userId);
 
     int setRole(int userId, String roleIds) throws Exception;
+    
+    void exportTemplate(Integer organizationId);
+    
+    ResponseData importUser(Integer organizationId, MultipartFile file);
+    
+    void export(Integer organizationId, String departmentId, String nickName);
     
     int getUserPositionLevel(int userId);
     

@@ -45,7 +45,7 @@ public class Menu implements Serializable {
     @TableField("menu_url")
     private String menuUrl;
 
-    @ApiModelProperty("上级部门ID")
+    @ApiModelProperty("上级菜单ID")
     @TableField("parent_id")
     private Integer parentId;
 

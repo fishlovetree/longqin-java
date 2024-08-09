@@ -23,6 +23,7 @@
         <result column="organization_name" property="organizationName" />
         <result column="logo_path" property="logoPath" />
         <result column="system_name" property="systemName" />
+        <result column="roleIds" property="roleIds" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -49,7 +50,9 @@
     </select>
     
     <select id="selectPage" resultMap="BaseResultMap">
-        select u.*, d.department_name, s.position_name from sys_user u
+        select u.*, d.department_name, s.position_name, 
+        (select GROUP_CONCAT(ur.role_id) from sys_userrole ur where ur.user_id = u.user_id) as roleIds 
+        from sys_user u
         left join sys_department d on d.department_id = u.department_id
         left join sys_position s on s.position_id = u.position_id
         where u.status = 1
