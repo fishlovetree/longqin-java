@@ -39,6 +39,25 @@ public class OrganizationController {
 
 	@Autowired
 	IOrganizationService organizationService;
+	
+	/**
+	 * @Description 根据id获取公司
+	 * @Author longqin
+	 * @Time: 2023年10月22日
+	 */
+	@ApiOperation(value = "根据id获取公司", httpMethod = "GET")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "orgId", value = "公司id", required = true, dataType = "int") })
+	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败") })
+	@GetMapping("/getById")
+	public ResponseData getById(int orgId) {
+		Organization org = organizationService.getById(orgId);
+		if (org == null){
+			return new ResponseData(ResponseEnum.ERROR.getCode(), "查询失败");
+		}
+		else{
+			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", org);
+		}
+	}
 
 	/**
 	 * @Description 获取公司列表
@@ -115,7 +134,7 @@ public class OrganizationController {
 	@ApiResponses({ @ApiResponse(code = 1, message = "修改成功"), @ApiResponse(code = 0, message = "修改失败"),
 			@ApiResponse(code = 2, message = "公司已存在"), @ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/update")
-	@RequiredPermission("organization:view")
+//	@RequiredPermission("organization:view")
 	public ResponseData update(@RequestBody Organization organization) throws Exception {
 		if (null == organization) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
