@@ -68,8 +68,9 @@ public class WfFlowServiceImpl extends ServiceImpl<WfFlowMapper, WfFlow> impleme
                 sb.append("rect" + i + ":{data:{\"id\":\"" + node.getNodeId() + "\",\"name\":\"" + node.getNodeName() 
                     + "\",\"rectType\":\"" + node.getNodeType() + "\",\"formId\":\"" + node.getFormId() + "\",\"cooperation\":\"" 
                 	+ node.getCooperation() + "\",\"virtual\":\"" + node.getVirtual() + "\",\"departmentId\":\"" 
-                    + node.getDepartmentId() + "\",\"positionId\":\"" + node.getPositionId() + "\",\"userId\":\"" 
-                	+ node.getUserId() + "\",\"remark\":\"" + node.getDescription() + "\"}, attr:{x:" + node.getPositionX() 
+                    + (node.getDepartmentId() == null ? "" : node.getDepartmentId()) + "\",\"positionId\":\"" 
+                	+ (node.getPositionId() == null ? "" : node.getPositionId()) + "\",\"userId\":\"" 
+                	+ (node.getUserId() == null ? "" : node.getUserId()) + "\",\"remark\":\"" + node.getDescription() + "\"}, attr:{x:" + node.getPositionX() 
                 	+ ",y:" + node.getPositionY() + "}, text:{\"text\":\"" + node.getNodeName() + "\"}}");
                 sb.append(",");
                 i++;

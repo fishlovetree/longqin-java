@@ -75,7 +75,7 @@ public class UserController {
 		@ApiImplicitParam(name = "nickName", value = "检索条件：昵称", dataType = "String") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败") })
 	@GetMapping("/getUserList")
-	@RequiredPermission("user:view")
+//	@RequiredPermission("user:view")
 	public ResponseData getUserList(String departmentId, String nickName) {
 		List<User> userList = userService.getPage(SessionUtil.getSessionUser().getOrganizationId(), departmentId, nickName, 0, 500);
 		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", userList);
@@ -93,7 +93,7 @@ public class UserController {
 		@ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "int") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败"), @ApiResponse(code = 3, message = "参数错误") })
 	@GetMapping("/getUserPage")
-	@RequiredPermission("user:view")
+//	@RequiredPermission("user:view")
 	public ResponseData getUserPage(String departmentId, String nickName, Integer page, Integer size) {
 		if (null == page || null == size) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");

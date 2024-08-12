@@ -1,6 +1,7 @@
 package com.longqin.system.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -89,7 +90,7 @@ public class UploadController {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
 		String os = System.getProperty("os.name").toLowerCase();
-		List<String> filePaths = new ArrayList<String>();
+		List<Map<String, String>> fileList = new ArrayList<>();
 		for(Map.Entry<String, MultipartFile> entry : fileMap.entrySet()) {
 			MultipartFile file = entry.getValue();
 			String absolutePath = null;
@@ -104,14 +105,17 @@ public class UploadController {
 			if (fileNameArray.length > 0){
 				String fileName = fileNameArray[fileNameArray.length - 1];
 				String filePath = "/api/uploads/" + fileName;
-				filePaths.add(filePath);
+				Map<String, String> map = new HashMap<>();
+				map.put("name", fileName);
+				map.put("url", filePath);
+				fileList.add(map);
 			}
 		}
-		if (filePaths.size() > 0) {
-			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "上传成功", String.join(",", filePaths));
+		if (fileList.size() > 0) {
+			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "上传成功", fileList);
 		}
 		else {
-			return new ResponseData(ResponseEnum.ERROR.getCode(), "上传失败", String.join(",", filePaths));
+			return new ResponseData(ResponseEnum.ERROR.getCode(), "上传失败", null);
 		}
 	}
 }

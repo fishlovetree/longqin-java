@@ -68,7 +68,7 @@ public class DesFormController {
 		@ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "int") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败"), @ApiResponse(code = 3, message = "参数错误") })
 	@GetMapping("/getFormPage")
-	@RequiredPermission("formList:view")
+//	@RequiredPermission("formList:view")
 	public ResponseData getFormPage(Integer page, Integer size) {
 		if (null == page || null == size) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");

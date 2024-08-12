@@ -51,7 +51,7 @@ public class PositionController {
 	    @ApiResponse(code = 0, message="查询失败")
 	})
 	@GetMapping("/getPositionList")
-	@RequiredPermission("position:view")
+//	@RequiredPermission("position:view")
 	public ResponseData getPositionList() {
 		List<Position> positionList = positionService.getPositionList(SessionUtil.getSessionUser().getOrganizationId());
 		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", positionList);

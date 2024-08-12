@@ -48,7 +48,7 @@ public class OrganizationController {
 	@ApiOperation(value = "获取公司列表", httpMethod = "GET")
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败") })
 	@GetMapping("/getOrganizationList")
-	@RequiredPermission("organization:view")
+//	@RequiredPermission("organization:view")
 	public ResponseData getOrganizationList() {
 		List<Organization> orgList = organizationService.getList();
 		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", orgList);

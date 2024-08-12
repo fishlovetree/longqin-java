@@ -51,7 +51,7 @@ public class DepartmentController {
 	    @ApiResponse(code = 0, message="查询失败")
 	})
 	@GetMapping("/getDepartmentList")
-	@RequiredPermission("department:view")
+//	@RequiredPermission("department:view")
 	public ResponseData getDepartmentList() {
 		List<Department> departmentList = departmentService.getDepartmentList(SessionUtil.getSessionUser().getOrganizationId());
 		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", departmentList);
