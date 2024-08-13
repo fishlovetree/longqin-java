@@ -68,7 +68,6 @@ public class MenuController {
 	    @ApiResponse(code = 0, message="查询失败")
 	})
 	@GetMapping("/getMenuTree")
-	@RequiredPermission("menu:view")
 	public ResponseData getMenuTree() {
 		List<Map<String, Object>> menuTree = menuService.getMenuTree();
 		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", menuTree);

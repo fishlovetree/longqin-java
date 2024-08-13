@@ -139,7 +139,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         int result = userMapper.insert(entity);
         if (result > 0){
-        	setRole(result, entity.getRoleIds());
+        	setRole(entity.getUserId(), entity.getRoleIds());
         }
         return result;
     }

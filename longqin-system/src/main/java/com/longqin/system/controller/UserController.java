@@ -121,7 +121,7 @@ public class UserController {
 		if (null == user) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
-		if (0 == user.getOrganizationId())
+		if (null == user.getOrganizationId())
         {
 			user.setOrganizationId(SessionUtil.getSessionUser().getOrganizationId());
         }
@@ -147,7 +147,7 @@ public class UserController {
 	@ApiResponses({ @ApiResponse(code = 1, message = "修改成功"), @ApiResponse(code = 0, message = "修改失败"),
 			@ApiResponse(code = 2, message = "账号已存在"), @ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/update")
-	@RequiredPermission("user:view")
+//	@RequiredPermission("user:view")
 	public ResponseData update(@RequestBody User user) throws Exception {
 		if (null == user) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
