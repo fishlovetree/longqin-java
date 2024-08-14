@@ -34,7 +34,7 @@ public class DesFormServiceImpl extends ServiceImpl<DesFormMapper, DesForm> impl
 	@OperationLog(title = "创建表单", content = "'表单名称：' + #entity.getFormName()", operationType = "0")
 	@Override
     public int create(DesForm entity) throws Exception {
-		String tableName = "des_" + entity.getTableName() + "_" + entity.getCreator() + "_" + entity.getOrganizationId();
+		String tableName = "des_" + entity.getTableName() + "_" + entity.getOrganizationId();
     	entity.setTableName(tableName);
 		int count = desFormMapper.selectCountByTableName(tableName, 0);
 		if (count > 0) {
@@ -95,25 +95,32 @@ public class DesFormServiceImpl extends ServiceImpl<DesFormMapper, DesForm> impl
 	@OperationLog(title = "修改表单", content = "'表单名称：' + #entity.getFormName()", operationType = "2")
 	@Override
     public int update(DesForm entity) throws Exception {
-		int count = desFormMapper.selectCountByTableName(entity.getTableName(), entity.getId());
+		String tableName = "des_" + entity.getTableName() + "_" + entity.getOrganizationId();
+		entity.setTableName(tableName);
+		int count = desFormMapper.selectCountByTableName(tableName, entity.getId());
 		if (count > 0) {
 			// 表名已存在
 			return -2;
 		}
 		// 若数据库表已存在，旧表置为备份表
-		int tableCount = desFormMapper.selectTableCount(entity.getTableName());
+		int tableCount = desFormMapper.selectTableCount(tableName);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String datetime = sdf.format(new Date());
 		if (tableCount > 0){
-			desFormMapper.renameTable(entity.getTableName(), entity.getTableName() + "_bak" + datetime);
+			desFormMapper.renameTable(tableName, tableName + "_bak" + datetime);
 		}
-		JSONArray jsonArray = JSONArray.parseArray(entity.getJsonData());
+		JSONObject jsonObj = JSONObject.parseObject(entity.getJsonData());
+    	JSONArray jsonArray = jsonObj.getJSONArray("widgetList");
+    	if (jsonArray == null){
+    		return -1;
+    	}
     	StringBuilder columns = new StringBuilder();
     	for(int i = 0; i < jsonArray.size(); i++){
             JSONObject obj = (JSONObject)jsonArray.get(i);
             String columnType = "";
-            String tag = obj.getString("tag");
-            switch (tag)
+            String type = obj.getString("type");
+            JSONObject options = obj.getJSONObject("options");
+            switch (type)
             {
                 case "input":
                     columnType = "varchar(100)";
@@ -141,12 +148,12 @@ public class DesFormServiceImpl extends ServiceImpl<DesFormMapper, DesForm> impl
                     columnType = "varchar(50)";
                     break;
             }
-            String isNull = "true".equals(obj.getString("required")) ? "NOT NULL" : "NULL DEFAULT NULL";
-            columns.append("`").append(obj.getString("name")).append("` ").append(columnType)
+            String isNull = "true".equals(options.getString("required")) ? "NOT NULL" : "NULL DEFAULT NULL";
+            columns.append("`").append(options.getString("name")).append("` ").append(columnType)
             .append(" CHARACTER SET utf8 COLLATE utf8_general_ci ").append(isNull).append(" COMMENT '")
-            .append(obj.getString("label")).append("',");
+            .append(options.getString("label")).append("',");
     	}
-    	int result = desFormMapper.createFormTable(entity.getTableName(), columns.toString(), entity.getFormName());
+    	int result = desFormMapper.createFormTable(tableName, columns.toString(), entity.getFormName());
     	if (result >= 0){
     		result = desFormMapper.updateById(entity);
     	}

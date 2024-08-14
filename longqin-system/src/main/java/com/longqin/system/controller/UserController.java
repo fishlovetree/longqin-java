@@ -45,6 +45,29 @@ public class UserController {
 
 	@Autowired
 	IUserService userService;
+	
+	private final static String DEFAULT_PASSWORD = "1111111"; // 默认密码
+	
+	/**
+	 * @Description 根据账号id获取昵称
+	 * @Author longqin
+	 * @Time: 2023年10月22日
+	 */
+	@ApiOperation(value = "根据账号id获取昵称", httpMethod = "GET")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "userId", value = "账号id", required = true, dataType = "Integer") })
+	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败"),
+			@ApiResponse(code = 3, message = "参数错误") })
+	@GetMapping("/getNickNameById")
+	public ResponseData getNickNameById(Integer userId) throws Exception {
+		if (null == userId) {
+			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
+		}
+		User user = userService.getById(userId);
+		if (user == null){
+			return new ResponseData(ResponseEnum.ERROR.getCode(), "查询失败", "");
+		}
+		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", user.getNickName());
+	}
 
 	/**
 	 * @Description 根据账号名获取账号
@@ -125,6 +148,7 @@ public class UserController {
         {
 			user.setOrganizationId(SessionUtil.getSessionUser().getOrganizationId());
         }
+		user.setPassword(DEFAULT_PASSWORD);
 		int result = userService.insert(user);
 		if (result > 0){
 			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "添加成功", result);
@@ -225,7 +249,7 @@ public class UserController {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误", null);
 		}
 		
-		if(password == null || password.isEmpty()) password = user.getUserName(); // 默认密码为账户名
+		if(password == null || password.isEmpty()) password = DEFAULT_PASSWORD;
 		
 		int result = userService.updatePassword(userId, password);
 		if (result > 0){

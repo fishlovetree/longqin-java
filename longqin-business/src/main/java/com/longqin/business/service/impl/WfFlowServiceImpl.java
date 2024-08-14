@@ -41,13 +41,13 @@ public class WfFlowServiceImpl extends ServiceImpl<WfFlowMapper, WfFlow> impleme
 	WfLinkMapper wfLinkMapper;
 	
 	@Override
-    public List<WfFlow> getFlowPage(int organizationId, int startIndex, int pageSize){
-        return wfFlowMapper.selectPage(organizationId, startIndex, pageSize);
+    public List<WfFlow> getFlowPage(int organizationId, String flowName, int startIndex, int pageSize){
+        return wfFlowMapper.selectPage(organizationId, flowName, startIndex, pageSize);
     }
     
 	@Override
-    public int getFlowCount(int organizationId){
-        return wfFlowMapper.selectCount(organizationId);
+    public int getFlowCount(int organizationId, String flowName){
+        return wfFlowMapper.selectCount(organizationId, flowName);
     }
 	
 	@Override

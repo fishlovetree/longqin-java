@@ -26,6 +26,9 @@
         <if test="organizationId != 0">
 	        and d.organization_id = #{organizationId,jdbcType=INTEGER}
 	    </if>
+	    <if test="flowName != null and flowName != ''">
+	        and d.flow_name like concat('%', concat(#{flowName,jdbcType=VARCHAR}, '%'))
+	    </if>
 	    order by d.flow_id desc
         limit #{startIndex,jdbcType=DECIMAL}, #{size,jdbcType=DECIMAL}
     </select>
@@ -35,6 +38,9 @@
         where d.status = 1
         <if test="organizationId != 0">
 	        and d.organization_id = #{organizationId,jdbcType=INTEGER}
+	    </if>
+	    <if test="flowName != null and flowName != ''">
+	        and d.flow_name like concat('%', concat(#{flowName,jdbcType=VARCHAR}, '%'))
 	    </if>
     </select>
     

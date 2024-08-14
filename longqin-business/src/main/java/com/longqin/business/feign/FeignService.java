@@ -35,6 +35,15 @@ public interface FeignService {
 	public ResponseData addException(@RequestBody Errorlog errorlog);
 	
 	/**
+	 * @Description 根据id获取昵称
+	 * @Author longqin
+	 * @Time: 2023年11月03日
+	 */
+	@RequestMapping(value = "/user/getNickNameById", method = RequestMethod.GET, headers = {
+			"servie-key=longqin-business", "request-uri=/user/getNickNameById"})
+	public ResponseData getNickNameById(@RequestParam(value = "userId") Integer userId);
+	
+	/**
 	 * @Description 获取用户职级
 	 * @Author longqin
 	 * @Time: 2023年11月03日

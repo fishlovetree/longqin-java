@@ -61,10 +61,13 @@
     </update>
     
     <select id="selectPage" resultMap="BaseResultMap">
-        select p.*, n.node_name, n.form_id, w.creator, w.create_time, f.flow_id, f.flow_name from wf_process p
+        select p.*, n.node_name, n.form_id, w.creator, w.create_time, f.flow_id, 
+        f.flow_name, u.nick_name as creatorName, d.department_name from wf_process p
         left join wf_node n on n.node_id = p.node_id
         left join wf_work w on w.work_id = p.work_id
         left join wf_flow f on f.flow_id = w.flow_id
+        left join sys_user u on u.user_id = w.creator
+        left join sys_department d on d.department_id = u.department_id
         where p.sending_to = #{userId} and p.status = #{status}
         <if test="beginDate != null and beginDate != ''">
 	        and p.submit_time &gt;= #{beginDate}

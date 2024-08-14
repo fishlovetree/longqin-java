@@ -67,13 +67,12 @@ public class WfFlowController {
 		@ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "int") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败"), @ApiResponse(code = 3, message = "参数错误") })
 	@GetMapping("/getFlowPage")
-	@RequiredPermission("flowList:view")
-	public ResponseData getFlowPage(Integer page, Integer size) {
+	public ResponseData getFlowPage(String flowName, Integer page, Integer size) {
 		if (null == page || null == size) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
-		List<WfFlow> flowList = wfFlowService.getFlowPage(SessionUtil.getSessionUser().getOrganizationId(), (page - 1) * size, size);
-		int total = wfFlowService.getFlowCount(SessionUtil.getSessionUser().getOrganizationId());
+		List<WfFlow> flowList = wfFlowService.getFlowPage(SessionUtil.getSessionUser().getOrganizationId(), flowName, (page - 1) * size, size);
+		int total = wfFlowService.getFlowCount(SessionUtil.getSessionUser().getOrganizationId(), flowName);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", flowList);
 		map.put("total", total);

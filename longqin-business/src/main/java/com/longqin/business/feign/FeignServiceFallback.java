@@ -26,6 +26,11 @@ public class FeignServiceFallback implements FeignService {
 	}
 	
 	@Override
+	public ResponseData getNickNameById(@RequestParam(value = "userId") Integer userId){
+		return new ResponseData(ResponseEnum.ERROR.getCode(), "");
+	}
+	
+	@Override
 	public ResponseData getUserPositionLevel(@RequestParam(value = "userId") Integer userId){
 		return new ResponseData(ResponseEnum.ERROR.getCode(), "获取用户职级超时");
 	}

@@ -19,9 +19,10 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface WfFlowMapper extends BaseMapper<WfFlow> {
 
-	List<WfFlow> selectPage(@Param("organizationId") Integer organizationId, @Param("startIndex") Integer startIndex, @Param("size") Integer size);
+	List<WfFlow> selectPage(@Param("organizationId") Integer organizationId, @Param("flowName") String flowName,
+			@Param("startIndex") Integer startIndex, @Param("size") Integer size);
 	
-	int selectCount(@Param("organizationId") Integer organizationId);
+	int selectCount(@Param("organizationId") Integer organizationId, @Param("flowName") String flowName);
 	
 	int deleteFlow(@Param("id") Integer id);
 }

@@ -16,9 +16,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IWfFlowService extends IService<WfFlow> {
 	
-	List<WfFlow> getFlowPage(int organizationId, int startIndex, int pageSize);
+	List<WfFlow> getFlowPage(int organizationId, String flowName, int startIndex, int pageSize);
 
-	int getFlowCount(int organizationId);
+	int getFlowCount(int organizationId, String flowName);
 	
 	WfFlow getFlowById(int flowId);
 	

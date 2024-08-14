@@ -134,7 +134,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 			return -2;
 		}
 		if (StringUtils.isEmpty(entity.getPassword())){
-    	    entity.setPassword(MD5Util.MD5(entity.getUserName()));
+    	    entity.setPassword(MD5Util.MD5(entity.getPassword()));
 		}
 
         int result = userMapper.insert(entity);

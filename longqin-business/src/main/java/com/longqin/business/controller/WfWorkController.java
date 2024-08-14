@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.longqin.business.entity.DesForm;
 import com.longqin.business.entity.WfProcess;
 import com.longqin.business.entity.WfStep;
+import com.longqin.business.feign.FeignService;
 import com.longqin.business.service.IWfWorkService;
 import com.longqin.business.util.ResponseData;
 import com.longqin.business.util.ResponseEnum;
@@ -46,6 +47,9 @@ public class WfWorkController {
 	
 	@Autowired
 	IWfWorkService workService;
+	
+	@Autowired
+	FeignService feignService;
 
 	/**
 	 * @Description 获取流程开始节点表单
@@ -75,10 +79,10 @@ public class WfWorkController {
 		if (null == params || params.size() == 0) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
-		int flowId = (Integer)params.get("flowId");
-		int processId = (Integer)params.get("processId");
-		String tableName = (String)params.get("tableName");
-		int isSave = (Integer)params.get("isSave");
+		int flowId = Integer.parseInt(params.get("flowId").toString());
+		int processId = Integer.parseInt(params.get("processId").toString());
+		String tableName = params.get("tableName").toString();
+		int isSave = Integer.parseInt(params.get("isSave").toString());
 		int direction = 1;
 		if (params.get("approval_status") != null) {
 			// 0表示不同意回退, 1表示同意前进
@@ -96,7 +100,13 @@ public class WfWorkController {
 		int result = workService.dealWork(flowId, processId, direction, tableName, columns, values, SessionUtil.getSessionUser().getUserId(), 
 				SessionUtil.getSessionUser().getOrganizationId(), isSave == 1 ? true : false);
 		if (result > 0){
-			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "处理成功", result);
+			if (result == 1){ // 结束流程
+				return new ResponseData(ResponseEnum.SUCCESS.getCode(), "处理成功", "处理成功，流程已结束");
+			}
+			else{
+				String nickName = feignService.getNickNameById(result).getData().toString();
+				return new ResponseData(ResponseEnum.SUCCESS.getCode(), "处理成功", "已发送给下个处理人：" + nickName);
+			}
 		}
 		else if (result == -2){
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "找不到下个节点处理人", result);
