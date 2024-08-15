@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -133,9 +132,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 			// 账号已存在
 			return -2;
 		}
-		if (StringUtils.isEmpty(entity.getPassword())){
-    	    entity.setPassword(MD5Util.MD5(entity.getPassword()));
-		}
+		entity.setPassword(MD5Util.MD5(entity.getPassword()));
 
         int result = userMapper.insert(entity);
         if (result > 0){

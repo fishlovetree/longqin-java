@@ -83,12 +83,8 @@ public class WfWorkController {
 		int processId = Integer.parseInt(params.get("processId").toString());
 		String tableName = params.get("tableName").toString();
 		int isSave = Integer.parseInt(params.get("isSave").toString());
-		int direction = 1;
-		if (params.get("approval_status") != null) {
-			// 0表示不同意回退, 1表示同意前进
-			direction = (Integer) params.get("approval_status");
-		}
-		String[] flowKeys = {"flowId", "processId", "tableName", "isSave"};
+		int direction = Integer.parseInt(params.get("direction").toString());
+		String[] flowKeys = {"flowId", "processId", "tableName", "isSave", "direction"};
 		List<String> columns = new ArrayList<String>();
 		List<String> values = new ArrayList<String>();
 		params.forEach((key, value)->{
@@ -100,12 +96,18 @@ public class WfWorkController {
 		int result = workService.dealWork(flowId, processId, direction, tableName, columns, values, SessionUtil.getSessionUser().getUserId(), 
 				SessionUtil.getSessionUser().getOrganizationId(), isSave == 1 ? true : false);
 		if (result > 0){
-			if (result == 1){ // 结束流程
-				return new ResponseData(ResponseEnum.SUCCESS.getCode(), "处理成功", "处理成功，流程已结束");
+			if (isSave == 1){
+				// 暂存返回processId
+				return new ResponseData(ResponseEnum.SUCCESS.getCode(), "处理成功", result);
 			}
 			else{
-				String nickName = feignService.getNickNameById(result).getData().toString();
-				return new ResponseData(ResponseEnum.SUCCESS.getCode(), "处理成功", "已发送给下个处理人：" + nickName);
+				if (result == 1){ // 结束流程
+					return new ResponseData(ResponseEnum.SUCCESS.getCode(), "处理成功", "处理成功，流程已结束");
+				}
+				else{
+					String nickName = feignService.getNickNameById(result).getData().toString();
+					return new ResponseData(ResponseEnum.SUCCESS.getCode(), "处理成功", "已发送给下个处理人：" + nickName);
+				}
 			}
 		}
 		else if (result == -2){

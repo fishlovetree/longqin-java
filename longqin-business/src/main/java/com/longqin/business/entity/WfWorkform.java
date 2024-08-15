@@ -85,6 +85,10 @@ public class WfWorkform implements Serializable {
     @ApiModelProperty("提交人")
     @TableField(exist = false)
     private Integer submitter;
+    
+    @ApiModelProperty("提交人昵称")
+    @TableField(exist = false)
+    private String submitterName;
 
     @ApiModelProperty("提交时间")
     @TableField(exist = false)

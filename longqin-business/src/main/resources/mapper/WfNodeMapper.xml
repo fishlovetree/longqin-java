@@ -9,7 +9,7 @@
         <result column="node_type" property="nodeType" />
         <result column="group_seq" property="groupSeq" />
         <result column="form_id" property="formId" />
-        <result column="virtual" property="virtual" />
+        <result column="is_virtual" property="virtual" />
         <result column="cooperation" property="cooperation" />
         <result column="department_id" property="departmentId" />
         <result column="position_x" property="positionX" />
@@ -29,25 +29,25 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        node_id, node_name, node_type, group_seq, form_id, virtual, cooperation, department_id, position_x, position_y, 
+        node_id, node_name, node_type, group_seq, form_id, is_virtual, cooperation, department_id, position_x, position_y, 
         position_id, user_id, is_approval, flow_id, description, creator, create_time, organization_id, status, form_name
     </sql>
     
     <update id="deleteByFlow">
-        update wf_node set status = 0 where flow_id = #{flowId}
+        update wf_node set `status` = 0 where flow_id = #{flowId}
     </update>
     
     <select id="selectFlowNodes" resultMap="BaseResultMap">
-        select * from wf_node where flow_id = #{flowId} and status = 1
+        select * from wf_node where flow_id = #{flowId} and `status` = 1
     </select>
     
     <select id="selectFlowBeginNode" resultMap="BaseResultMap">
-        select s.* from wf_node s where s.flow_id = #{flowId} and s.status = 1 and s.group_seq = 1
+        select s.* from wf_node s where s.flow_id = #{flowId} and s.`status` = 1 and s.group_seq = 1
     </select>
     
     <select id="selectFlowBeginNodeForm" resultType="com.longqin.business.entity.DesForm">
         select d.* from wf_node s left join des_form d on d.id = s.form_id 
-        where s.flow_id = #{flowId} and s.status = 1 and s.group_seq = 1
+        where s.flow_id = #{flowId} and s.`status` = 1 and s.group_seq = 1
     </select>
 
 </mapper>

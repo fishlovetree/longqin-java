@@ -46,7 +46,7 @@ public class UserController {
 	@Autowired
 	IUserService userService;
 	
-	private final static String DEFAULT_PASSWORD = "1111111"; // 默认密码
+	private final static String DEFAULT_PASSWORD = "11111111"; // 默认密码
 	
 	/**
 	 * @Description 根据账号id获取昵称

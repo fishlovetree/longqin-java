@@ -53,7 +53,7 @@ public class WfNode implements Serializable {
     private Integer formId;
 
     @ApiModelProperty("是否虚拟节点：1-是，0-否")
-    @TableField("virtual")
+    @TableField("is_virtual")
     private Integer virtual;
 
     @ApiModelProperty("是否多人协作：1-是，0-否")

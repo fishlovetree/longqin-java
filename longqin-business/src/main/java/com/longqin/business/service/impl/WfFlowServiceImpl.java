@@ -138,7 +138,6 @@ public class WfFlowServiceImpl extends ServiceImpl<WfFlowMapper, WfFlow> impleme
                 wfNode.setFlowId(entity.getFlowId());
                 wfNode.setCreator(entity.getCreator());
                 wfNode.setOrganizationId(entity.getOrganizationId());
-                wfNode.setStatus(1);
                 if (wfNode.getNodeId() == null)
                 {
                 	wfNodeMapper.insert(wfNode);

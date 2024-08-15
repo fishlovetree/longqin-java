@@ -22,11 +22,12 @@
     </select>
     
     <select id="selectWorkFormList" resultType="com.longqin.business.entity.WfWorkform">
-        select p.process_id, t.submit_time as submitTime, t.submitter, d.* from wf_process p 
+        select p.process_id, t.submit_time as submitTime, t.submitter, u.nick_name as submitterName, d.* from wf_process p 
         left join wf_node s on s.node_id= p.node_id 
         left join des_form d on d.id = s.form_id
         left join wf_workform w on w.process_id = p.process_id 
         left join wf_step t on t.process_id = p.process_id
+        left join sys_user u on u.user_id = t.submitter
         where p.work_id = #{workId} and p.status = 0 and w.id is not null
     </select>
     

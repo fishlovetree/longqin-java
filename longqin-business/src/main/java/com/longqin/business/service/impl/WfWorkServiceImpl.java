@@ -139,10 +139,14 @@ public class WfWorkServiceImpl extends ServiceImpl<WfWorkMapper, WfWork> impleme
         else {
             WfProcess flowProcess = processMapper.selectProcessById(processId);
             // 插入表单数据
-            dealFormData(flowProcess.getWorkId(), processId, flowProcess.getNodeId(), tableName, columns, values, flowProcess.getFormDataId());
+            dealFormData(flowProcess.getWorkId(), processId, flowProcess.getNodeId(), tableName, columns, values, flowProcess.getFormDataId() == null ? 0 : flowProcess.getFormDataId());
             if (!isSave) {
                 // 流程流转
                 result = excuteFlow(flowProcess.getFlowId(), flowProcess.getWorkId(), processId, flowProcess.getNodeId(), action, columns, values, submitter, organizationId);
+            }
+            else{
+            	// 返回代办工作ID
+                result = processId;
             }
         }
         if (result == -2){
