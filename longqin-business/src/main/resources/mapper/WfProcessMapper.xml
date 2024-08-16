@@ -22,6 +22,8 @@
         <result column="node_name" property="nodeName" />
         <result column="creator" property="creator" />
         <result column="create_time" property="createTime" />
+        <result column="action" property="action" />
+        <result column="dealTime" property="dealTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -30,7 +32,7 @@
     </sql>
     
     <select id="selectNodeFirstProcess" resultMap="BaseResultMap">
-        select * from wf_process where work_id = #{workId} and nodeId = #{nodeId} order by processId desc limit 1
+        select * from wf_process where work_id = #{workId} and node_id = #{nodeId} order by process_id desc limit 1
     </select>
     
     <select id="selectProcessById" resultMap="BaseResultMap">
@@ -62,10 +64,11 @@
     
     <select id="selectPage" resultMap="BaseResultMap">
         select p.*, n.node_name, n.form_id, w.creator, w.create_time, f.flow_id, 
-        f.flow_name, u.nick_name as creatorName, d.department_name from wf_process p
+        f.flow_name, t.action, t.submit_time as dealtime, u.nick_name as creatorName, d.department_name from wf_process p
         left join wf_node n on n.node_id = p.node_id
         left join wf_work w on w.work_id = p.work_id
         left join wf_flow f on f.flow_id = w.flow_id
+        left join wf_step t on t.process_id = p.process_id
         left join sys_user u on u.user_id = w.creator
         left join sys_department d on d.department_id = u.department_id
         where p.sending_to = #{userId} and p.status = #{status}

@@ -289,4 +289,22 @@ public class WfWorkController {
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "作废失败", result);
 		}
 	}
+	
+	/**
+	 * @Description 获取流程创建人id
+	 * @Author longqin
+	 * @Time: 2023年11月01日
+	 */
+	@ApiOperation(value = "获取流程创建人id", httpMethod = "GET")
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(name = "workId", value = "流程实例ID", required = true, dataType = "int") })
+	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败"), @ApiResponse(code = 3, message = "参数错误") })
+	@GetMapping("/getCreator")
+	public ResponseData getCreator(Integer workId) {
+		if (null == workId) {
+			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
+		}
+		int creator = workService.getCreator(workId);
+		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", creator);
+	}
 }

@@ -111,5 +111,15 @@ public class WfProcess implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") // 前端时间字符串转java时间戳
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") // 后台时间戳转前端时间字符串(json对象)
     private LocalDateTime createTime;
+    
+    @ApiModelProperty("动作：1-前进，0-驳回，3-转办")
+ 	@TableField(exist = false)
+    private Integer action;
+    
+    @ApiModelProperty("处理时间")
+    @TableField(exist = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") // 前端时间字符串转java时间戳
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8") // 后台时间戳转前端时间字符串(json对象)
+    private LocalDateTime dealTime;
 
 }

@@ -28,7 +28,7 @@
         left join wf_workform w on w.process_id = p.process_id 
         left join wf_step t on t.process_id = p.process_id
         left join sys_user u on u.user_id = t.submitter
-        where p.work_id = #{workId} and p.status = 0 and w.id is not null
+        where p.work_id = #{workId} and p.status = 0 and w.id is not null and t.action = 1
     </select>
     
     <select id="selectTableDatas" resultType="java.util.HashMap">

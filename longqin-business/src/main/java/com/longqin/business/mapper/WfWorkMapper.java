@@ -19,4 +19,6 @@ public interface WfWorkMapper extends BaseMapper<WfWork> {
 	int closeWork(@Param("workId")Integer workId);
 	
 	int disableWork(@Param("workId")Integer workId);
+	
+	int getCreator(@Param("workId")Integer workId);
 }

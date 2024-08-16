@@ -42,4 +42,6 @@ public interface IWfWorkService extends IService<WfWork> {
 	int getStepCount(int workId);
 	
 	int disableWork(int workId) throws Exception;
+	
+	int getCreator(int workId);
 }

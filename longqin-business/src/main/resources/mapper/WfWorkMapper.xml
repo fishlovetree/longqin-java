@@ -25,5 +25,9 @@
     <update id="disableWork">
         update wf_work set status = 9 where work_id = #{workId}
     </update>
+    
+    <select id="getCreator" resultType="java.lang.Integer">
+        select creator from wf_work where work_id = #{workId}
+    </select>
 
 </mapper>

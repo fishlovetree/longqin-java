@@ -23,10 +23,7 @@ import com.longqin.business.util.ResponseData;
 import com.longqin.business.util.ResponseEnum;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
-import static org.mockito.Mockito.ignoreStubs;
-
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -34,7 +31,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -618,5 +614,10 @@ public class WfWorkServiceImpl extends ServiceImpl<WfWorkMapper, WfWork> impleme
     public int disableWork(int workId) throws Exception {
     	processMapper.disableProcess(workId);
         return workMapper.disableWork(workId);
+    }
+    
+    @Override
+    public int getCreator(int workId) {
+        return workMapper.getCreator(workId);
     }
 }
