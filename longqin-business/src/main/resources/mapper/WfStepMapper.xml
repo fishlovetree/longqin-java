@@ -23,9 +23,10 @@
     </sql>
     
     <select id="selectPage" resultType="com.longqin.business.entity.WfStep">
-        select s.*, n.node_name, p.submit_time as beginTime from wf_step s
+        select s.*, n.node_name, p.submit_time as beginTime, u.nick_name as submitterName from wf_step s
         left join wf_node n on n.node_id = s.node_id
         left join wf_process p on s.process_id = p.process_id
+        left join sys_user u on u.user_id = s.submitter
         where s.work_id = #{workId}
         order by s.step_id desc
         limit #{startIndex,jdbcType=DECIMAL}, #{size,jdbcType=DECIMAL}
