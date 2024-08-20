@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -73,5 +74,9 @@ public class DiyTable implements Serializable {
     @ApiModelProperty("列表详情")
  	@TableField(exist = false)
     private String data;
+    
+    @ApiModelProperty("列表字段集合")
+ 	@TableField(exist = false)
+    private List<DiyTableColumns> columns;
 
 }

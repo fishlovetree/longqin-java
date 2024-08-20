@@ -29,12 +29,12 @@ public class DiyTableColumns implements Serializable {
     private Integer tableId;
 
     @ApiModelProperty("列表字段")
-    @TableField("table_column")
-    private String tableColumn;
-
-    @ApiModelProperty("字段名称")
     @TableField("column_name")
     private String columnName;
+
+    @ApiModelProperty("字段描述")
+    @TableField("description")
+    private String description;
 
     @ApiModelProperty("字段排序")
     @TableField("column_index")

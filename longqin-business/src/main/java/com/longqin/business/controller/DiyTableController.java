@@ -66,7 +66,7 @@ public class DiyTableController {
 		@ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "int") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败"), @ApiResponse(code = 3, message = "参数错误") })
 	@GetMapping("/getTablePage")
-	@RequiredPermission("tablelist:view")
+	@RequiredPermission("tableList:view")
 	public ResponseData getTablePage(Integer page, Integer size) {
 		if (null == page || null == size) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
@@ -89,7 +89,7 @@ public class DiyTableController {
 	@ApiResponses({ @ApiResponse(code = 1, message = "创建成功"), @ApiResponse(code = 0, message = "创建失败"),
 			@ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/create")
-	@RequiredPermission("tabledesign:view")
+	@RequiredPermission("tableDesigner:view")
 	public ResponseData create(@RequestBody DiyTable entity) throws Exception {
 		if (null == entity || null == entity.getTableName()) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
@@ -115,7 +115,7 @@ public class DiyTableController {
 	@ApiResponses({ @ApiResponse(code = 1, message = "修改成功"), @ApiResponse(code = 0, message = "修改失败"),
 			@ApiResponse(code = 3, message = "参数错误") })
 	@PostMapping("/update")
-	@RequiredPermission("tabledesign:view")
+	@RequiredPermission("tableDesigner:view")
 	public ResponseData update(@RequestBody DiyTable entity) throws Exception {
 		if (null == entity || null == entity.getTableName()) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
@@ -140,7 +140,7 @@ public class DiyTableController {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "id", value = "表单ID", required = true, dataType = "int") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "删除成功"), @ApiResponse(code = 0, message = "删除失败") })
 	@PostMapping("/delete")
-	@RequiredPermission("tablelist:view")
+	@RequiredPermission("tableList:view")
 	public ResponseData delete(int id) throws Exception {
 		int result = diyTableService.delete(id);
 		if (result >= 0){

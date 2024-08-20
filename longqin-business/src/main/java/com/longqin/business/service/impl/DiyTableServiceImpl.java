@@ -42,7 +42,10 @@ public class DiyTableServiceImpl extends ServiceImpl<DiyTableMapper, DiyTable> i
 	
 	@Override
     public DiyTable getById(int id) {
-        return diyTableMapper.selectById(id);
+		DiyTable diyTable =  diyTableMapper.selectById(id);
+		List<DiyTableColumns> columns = diyTableColumnsMapper.selectTableColumns(id);
+		diyTable.setColumns(columns);
+		return diyTable;
     }
 	
 	@Override
@@ -72,15 +75,15 @@ public class DiyTableServiceImpl extends ServiceImpl<DiyTableMapper, DiyTable> i
             for (int i = 0; i < jsonArray.size(); i++) {
             	JSONObject obj = (JSONObject)jsonArray.get(i);
             	DiyTableColumns column = new DiyTableColumns();
-                column.setTableColumn(obj.getString("TableColumn"));
-                column.setColumnName(obj.getString("ColumnName"));
+                column.setColumnName(obj.getString("columnName"));
+                column.setDescription(obj.getString("description"));
                 column.setColumnIndex(i);
-                column.setWidth(obj.getIntValue("Width"));
-                column.setOrderBy(obj.getIntValue("Orderby"));
-                column.setSearchType(obj.getIntValue("SearchType"));
-                column.setFormula(obj.getIntValue("Formula"));
-                column.setFormulaValue(obj.getString("FormulaValue"));
-                column.setColumnType(obj.getString("ColumnType"));
+                column.setWidth(obj.getIntValue("width"));
+                column.setOrderBy(obj.getIntValue("orderby"));
+                column.setSearchType(obj.getIntValue("searchType"));
+                column.setFormula(obj.getIntValue("formula"));
+                column.setFormulaValue(obj.getString("formulaValue"));
+                column.setColumnType(obj.getString("columnType"));
                 column.setTableId(entity.getId());
                 diyTableColumnsMapper.insert(column);
             }
@@ -102,15 +105,15 @@ public class DiyTableServiceImpl extends ServiceImpl<DiyTableMapper, DiyTable> i
             for (int i = 0; i < jsonArray.size(); i++) {
             	JSONObject obj = (JSONObject)jsonArray.get(i);
             	DiyTableColumns column = new DiyTableColumns();
-                column.setTableColumn(obj.getString("TableColumn"));
-                column.setColumnName(obj.getString("ColumnName"));
+                column.setColumnName(obj.getString("columnName"));
+                column.setDescription(obj.getString("description"));
                 column.setColumnIndex(i);
-                column.setWidth(obj.getIntValue("Width"));
-                column.setOrderBy(obj.getIntValue("Orderby"));
-                column.setSearchType(obj.getIntValue("SearchType"));
-                column.setFormula(obj.getIntValue("Formula"));
-                column.setFormulaValue(obj.getString("FormulaValue"));
-                column.setColumnType(obj.getString("ColumnType"));
+                column.setWidth(obj.getIntValue("width"));
+                column.setOrderBy(obj.getIntValue("orderby"));
+                column.setSearchType(obj.getIntValue("searchType"));
+                column.setFormula(obj.getIntValue("formula"));
+                column.setFormulaValue(obj.getString("formulaValue"));
+                column.setColumnType(obj.getString("columnType"));
                 column.setTableId(entity.getId());
                 diyTableColumnsMapper.insert(column);
             }
@@ -151,58 +154,58 @@ public class DiyTableServiceImpl extends ServiceImpl<DiyTableMapper, DiyTable> i
         for (DiyTableColumns column : columns) {
             String sourceName = ""; // 未加工原始字段sql
             // 拼接查询项
-            if ("creatorName".equals(column.getTableColumn())) {
+            if ("creatorName".equals(column.getColumnName())) {
                 columnSql += ", u.nick_name as creatorName";
                 sourceName = "u.user_name";
                 leftJoin += " left join sys_user u on u.user_id = s.creator";
             }
             else {
-                sourceName = "s." + column.getTableColumn();
+                sourceName = "s." + column.getColumnName();
                 // 字段加工
                 if (!StringUtils.isEmpty(column.getFormulaValue())) {
                     switch (column.getFormula()) {
                         case 0: // 默认不加工
-                            columnSql += ", s." + column.getTableColumn();
+                            columnSql += ", s." + column.getColumnName();
                             break;
                         case 1: // 加（后续实现）
-                            columnSql += ", s." + column.getTableColumn();
+                            columnSql += ", s." + column.getColumnName();
                             break;
                         case 2: // 减（后续实现）
-                            columnSql += ", s." + column.getTableColumn();
+                            columnSql += ", s." + column.getColumnName();
                             break;
                         case 3: // 乘（后续实现）
-                            columnSql += ", s." + column.getTableColumn();
+                            columnSql += ", s." + column.getColumnName();
                             break;
                         case 4: // 除（后续实现）
-                            columnSql += ", s." + column.getTableColumn();
+                            columnSql += ", s." + column.getColumnName();
                             break;
                         case 5: // 拼接
-                            columnSql += ", cast(s." + column.getTableColumn() + " as char) + '" + column.getFormulaValue() + "' as " + column.getTableColumn();
+                            columnSql += ", cast(s." + column.getColumnName() + " as char) + '" + column.getFormulaValue() + "' as " + column.getColumnName();
                             break;
                         default:
                             break;
                     }
                 }
                 else  {
-                    columnSql += ", s." + column.getTableColumn();
+                    columnSql += ", s." + column.getColumnName();
                 }
             }
             // 拼接条件
             if (column.getSearchType() == 1) { // 等于 
-                String searchValue = searchMap.get(column.getTableColumn());
+                String searchValue = searchMap.get(column.getColumnName());
                 if (!StringUtils.isEmpty(searchValue)) {
                     whereSql += " and " + sourceName + " = '" + searchValue + "'";
                 }
             }
             else if (column.getSearchType() == 2) { // 模糊查询
-                String searchValue = searchMap.get(column.getTableColumn());
+                String searchValue = searchMap.get(column.getColumnName());
                 if (!StringUtils.isEmpty(searchValue)) {
                     whereSql += " and " + sourceName + " like '%" + searchValue + "%'";
                 }
             }
             else if (column.getSearchType() == 3) {
-                String searchBeginValue = searchMap.get(column.getTableColumn() + "_begin");
-                String searchEndValue = searchMap.get(column.getTableColumn() + "_end");
+                String searchBeginValue = searchMap.get(column.getColumnName() + "_begin");
+                String searchEndValue = searchMap.get(column.getColumnName() + "_end");
                 if (!StringUtils.isEmpty(searchBeginValue)) {
                     whereSql += " and " + sourceName + " >= '" + searchBeginValue + "'";
                 }

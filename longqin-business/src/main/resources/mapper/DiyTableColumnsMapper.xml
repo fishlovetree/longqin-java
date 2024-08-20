@@ -5,8 +5,8 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.longqin.business.entity.DiyTableColumns">
         <result column="table_id" property="tableId" />
-        <result column="table_column" property="tableColumn" />
         <result column="column_name" property="columnName" />
+        <result column="description" property="description" />
         <result column="column_index" property="columnIndex" />
         <result column="width" property="width" />
         <result column="order_by" property="orderBy" />
@@ -18,7 +18,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        table_id, table_column, column_name, column_index, width, order_by, seearch_type, formula, formula_value, column_type
+        table_id, column_name, description, column_index, width, order_by, seearch_type, formula, formula_value, column_type
     </sql>
     
     <select id="selectTableColumns" resultMap="BaseResultMap">
