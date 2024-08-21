@@ -26,7 +26,7 @@ public interface DiyTableMapper extends BaseMapper<DiyTable> {
 	
 	int delete(@Param("id") Integer id);
 	
-	Map<String, String> selectTableData(@Param("dataSql") String dataSql);
+	List<Map<String, String>> selectTableData(@Param("dataSql") String dataSql);
 	
 	int selectTableDataCount(@Param("countSql") String countSql);
 }

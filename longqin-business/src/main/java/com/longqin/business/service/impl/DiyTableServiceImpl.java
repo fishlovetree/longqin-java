@@ -146,7 +146,7 @@ public class DiyTableServiceImpl extends ServiceImpl<DiyTableMapper, DiyTable> i
 	public Map<String, Object> getTableData(int startIndex, int pageSize, int id, String dataSource, 
 			int organizationId, Map<String, String> searchMap) {
         List<DiyTableColumns> columns = diyTableColumnsMapper.selectTableColumns(id);
-        String dataSql = "select"; // 分页查询数据sql
+        String dataSql = "select "; // 分页查询数据sql
         String columnSql = "1"; // 查询内容sql
         String whereSql = " where s.status = 1 and s.organization_id = " + organizationId; // 条件sql
         String leftJoin = ""; // 链接其他表sql
@@ -223,13 +223,13 @@ public class DiyTableServiceImpl extends ServiceImpl<DiyTableMapper, DiyTable> i
                 }
             }
         }
-        orderBy = orderBy.equals("") ? "order by s.id desc" : orderBy;
+        orderBy = orderBy.equals("") ? " order by s.id desc" : orderBy;
         dataSql += columnSql + " from " + dataSource + " s" + leftJoin + whereSql 
-            + orderBy + " limit " + startIndex + " " + pageSize;
+            + orderBy + " limit " + startIndex + ", " + pageSize;
         String countSql = "select count(0) from " + dataSource + " s"; // 查询数量sql
         countSql += leftJoin;
         countSql += whereSql;
-        Map<String, String> dataList = diyTableMapper.selectTableData(dataSql);
+        List<Map<String, String>> dataList = diyTableMapper.selectTableData(dataSql);
         int total = diyTableMapper.selectTableDataCount(countSql);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("list", dataList);

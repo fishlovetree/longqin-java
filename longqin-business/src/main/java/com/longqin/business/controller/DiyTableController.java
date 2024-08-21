@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.longqin.business.config.RequiredPermission;
 import com.longqin.business.entity.DiyTable;
+import com.longqin.business.entity.DiyTableColumns;
 import com.longqin.business.service.IDiyTableService;
 import com.longqin.business.util.ResponseData;
 import com.longqin.business.util.ResponseEnum;
@@ -149,5 +151,60 @@ public class DiyTableController {
 		else{
 			return new ResponseData(ResponseEnum.ERROR.getCode(), "删除失败", result);
 		}
+	}
+	
+	/**
+	 * @Description 获取自定义列表表头
+	 * @Author longqin
+	 * @Time: 2023年11月13日
+	 */
+	@ApiOperation(value = "获取自定义列表表头", httpMethod = "GET")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "id", value = "列表ID", required = true, dataType = "int") })
+	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败") })
+	@GetMapping("/getTableColumns")
+	public ResponseData getTableColumns(int id) {
+		List<DiyTableColumns> columns = diyTableService.getTableColumns(id);
+		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", columns);
+	}
+	
+	/**
+	 * @Description 获取自定义列表数据
+	 * @Author longqin
+	 * @Time: 2023年11月13日
+	 */
+	@ApiOperation(value = "获取自定义列表数据", httpMethod = "GET")
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(name = "page", value = "页数", required = true, dataType = "int"),
+		@ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "int") })
+	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败"), @ApiResponse(code = 3, message = "参数错误") })
+	@PostMapping("/GetTableData")
+	public ResponseData GetTableData(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, String> searchMap = new HashMap<>();
+		Integer page = null; 
+		Integer size = null; 
+		Integer id = null;
+		String dataSource = "";
+		for(Map.Entry<String, Object> entry : params.entrySet()){
+			if (entry.getKey().equals("page")){
+				page = Integer.parseInt(entry.getValue().toString());
+			}
+			else if (entry.getKey().equals("size")){
+				size = Integer.parseInt(entry.getValue().toString());
+			}
+			else if (entry.getKey().equals("id")){
+				id = Integer.parseInt(entry.getValue().toString());
+			}
+			else if (entry.getKey().equals("dataSource")){
+				dataSource = entry.getValue().toString();
+			}
+			else{
+				searchMap.put(entry.getKey(), entry.getValue().toString());
+			}
+		}
+		if (null == page || null == size || null == id || StringUtils.isEmpty(dataSource)) {
+			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
+		}
+		Map<String, Object> map = diyTableService.getTableData((page - 1) * size, size, id, dataSource, SessionUtil.getSessionUser().getOrganizationId(), searchMap);
+		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", map);
 	}
 }
