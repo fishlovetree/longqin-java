@@ -46,15 +46,15 @@ public class DiyTableColumns implements Serializable {
 
     @ApiModelProperty("是否排序：0-不排序，1-升序，2-降序")
     @TableField("order_by")
-    private Integer orderBy;
+    private String orderBy;
 
     @ApiModelProperty("是否搜索：0-否，1-等于，2-模糊查询，3-介于")
     @TableField("search_type")
-    private Integer searchType;
+    private String searchType;
 
     @ApiModelProperty("公式：0-否，1-加，2-减，3-乘，4-除，5-拼接")
     @TableField("formula")
-    private Integer formula;
+    private String formula;
 
     @ApiModelProperty("公式值")
     @TableField("formula_value")

@@ -41,4 +41,6 @@ public interface DesFormMapper extends BaseMapper<DesForm> {
 	int updateFormData(@Param("tableName") String tableName, @Param("data") String data, @Param("id") Integer id);
 	
 	List<DesFormColumn> selectTableColumns(@Param("tableName") String tableName);
+	
+	DesForm selectByTableName(@Param("tableName") String tableName);
 }

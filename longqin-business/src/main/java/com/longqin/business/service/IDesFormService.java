@@ -35,4 +35,6 @@ public interface IDesFormService extends IService<DesForm> {
 	int insertFormData(DesFormData entity);
 	
 	int updateFormData(String tableName, List<String> columns, List<String> vals, Integer id);
+	
+	DesForm getByTableName(String tableName);
 }

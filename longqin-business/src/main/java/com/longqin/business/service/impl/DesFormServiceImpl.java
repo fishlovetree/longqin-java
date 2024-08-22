@@ -213,4 +213,9 @@ public class DesFormServiceImpl extends ServiceImpl<DesFormMapper, DesForm> impl
 		sb.deleteCharAt(sb.length() - 1);
 		return desFormMapper.updateFormData(tableName, sb.toString(), id);
 	}
+	
+	@Override
+    public DesForm getByTableName(String tableName) {
+        return desFormMapper.selectByTableName(tableName);
+    }
 }

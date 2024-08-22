@@ -76,7 +76,13 @@
     
     <select id="selectTableColumns" resultType="com.longqin.business.entity.DesFormColumn">
         select column_name as columnName, column_type as columnType, is_nullable as isNull, column_comment as description 
-        from information_schema.columns where table_schema = 'longqin' AND table_name = '${tableName}';
+        from information_schema.columns where table_schema = 'longqin' and table_name = '${tableName}' 
+        and COLUMN_NAME not in ('creator', 'organization_id', 'status');
+    </select>
+    
+    <select id="selectByTableName" resultMap="BaseResultMap">
+        select d.* from des_form d
+        where d.status = 1 and d.table_name = #{tableName,jdbcType=VARCHAR}
     </select>
 
 </mapper>

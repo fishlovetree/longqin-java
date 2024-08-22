@@ -172,4 +172,18 @@ public class DesFormController {
 		List<DesFormColumn> columns = desFormService.getTableColumns(tableName);
 		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", columns);
 	}
+	
+	/**
+	 * @Description 根据数据库表名获取表单信息
+	 * @Author longqin
+	 * @Time: 2023年10月31日
+	 */
+	@ApiOperation(value = "根据数据库表名获取表单信息", httpMethod = "GET")
+	@ApiImplicitParams({ @ApiImplicitParam(name = "tableName", value = "数据库表名", required = true, dataType = "String") })
+	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败") })
+	@GetMapping("/getByTableName")
+	public ResponseData getByTableName(String tableName) {
+		DesForm form = desFormService.getByTableName(tableName);
+		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", form);
+	}
 }

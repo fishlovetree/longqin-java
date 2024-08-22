@@ -184,6 +184,7 @@ public class DiyTableController {
 		Integer size = null; 
 		Integer id = null;
 		String dataSource = "";
+		String columns = "";
 		for(Map.Entry<String, Object> entry : params.entrySet()){
 			if (entry.getKey().equals("page")){
 				page = Integer.parseInt(entry.getValue().toString());
@@ -197,14 +198,18 @@ public class DiyTableController {
 			else if (entry.getKey().equals("dataSource")){
 				dataSource = entry.getValue().toString();
 			}
+			else if (entry.getKey().equals("columns")){
+				columns = entry.getValue().toString();
+			}
 			else{
 				searchMap.put(entry.getKey(), entry.getValue().toString());
 			}
 		}
-		if (null == page || null == size || null == id || StringUtils.isEmpty(dataSource)) {
+		if (null == page || null == size || StringUtils.isEmpty(dataSource)) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
 		}
-		Map<String, Object> map = diyTableService.getTableData((page - 1) * size, size, id, dataSource, SessionUtil.getSessionUser().getOrganizationId(), searchMap);
+		Map<String, Object> map = diyTableService.getTableData((page - 1) * size, size, id, dataSource, columns,
+				SessionUtil.getSessionUser().getOrganizationId(), searchMap);
 		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", map);
 	}
 }

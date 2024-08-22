@@ -34,6 +34,6 @@ public interface IDiyTableService extends IService<DiyTable> {
     
     int insertTableColumns(int tableId, List<DiyTableColumns> list) throws Exception;
     
-    Map<String, Object> getTableData(int startIndex, int pageSize, int id, String dataSource, 
+    Map<String, Object> getTableData(Integer startIndex, Integer pageSize, Integer id, String dataSource, String selectedColumns, 
 			int organizationId, Map<String, String> searchMap);
 }

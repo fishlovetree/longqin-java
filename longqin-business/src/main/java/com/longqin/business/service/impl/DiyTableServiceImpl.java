@@ -7,10 +7,12 @@ import com.longqin.business.mapper.DiyTableColumnsMapper;
 import com.longqin.business.mapper.DiyTableMapper;
 import com.longqin.business.service.IDiyTableService;
 import com.longqin.business.util.OperationLog;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,9 +81,9 @@ public class DiyTableServiceImpl extends ServiceImpl<DiyTableMapper, DiyTable> i
                 column.setDescription(obj.getString("description"));
                 column.setColumnIndex(i);
                 column.setWidth(obj.getIntValue("width"));
-                column.setOrderBy(obj.getIntValue("orderby"));
-                column.setSearchType(obj.getIntValue("searchType"));
-                column.setFormula(obj.getIntValue("formula"));
+                column.setOrderBy(obj.getString("orderby"));
+                column.setSearchType(obj.getString("searchType"));
+                column.setFormula(obj.getString("formula"));
                 column.setFormulaValue(obj.getString("formulaValue"));
                 column.setColumnType(obj.getString("columnType"));
                 column.setTableId(entity.getId());
@@ -109,9 +111,9 @@ public class DiyTableServiceImpl extends ServiceImpl<DiyTableMapper, DiyTable> i
                 column.setDescription(obj.getString("description"));
                 column.setColumnIndex(i);
                 column.setWidth(obj.getIntValue("width"));
-                column.setOrderBy(obj.getIntValue("orderby"));
-                column.setSearchType(obj.getIntValue("searchType"));
-                column.setFormula(obj.getIntValue("formula"));
+                column.setOrderBy(obj.getString("orderby"));
+                column.setSearchType(obj.getString("searchType"));
+                column.setFormula(obj.getString("formula"));
                 column.setFormulaValue(obj.getString("formulaValue"));
                 column.setColumnType(obj.getString("columnType"));
                 column.setTableId(entity.getId());
@@ -143,9 +145,22 @@ public class DiyTableServiceImpl extends ServiceImpl<DiyTableMapper, DiyTable> i
 	}
 	
 	@Override
-	public Map<String, Object> getTableData(int startIndex, int pageSize, int id, String dataSource, 
+	public Map<String, Object> getTableData(Integer startIndex, Integer pageSize, Integer id, String dataSource, String selectedColumns,
 			int organizationId, Map<String, String> searchMap) {
-        List<DiyTableColumns> columns = diyTableColumnsMapper.selectTableColumns(id);
+		List<DiyTableColumns> columns = new ArrayList<>();
+		if (id != null){ // 自定义列表加载
+			columns = diyTableColumnsMapper.selectTableColumns(id);
+		}
+		else{ // 设计预览
+			if (!StringUtils.isEmpty(selectedColumns)){
+				JSONArray jsonArray = JSONArray.parseArray(selectedColumns);
+				for(int i = 0; i < jsonArray.size(); i++){
+					JSONObject obj = (JSONObject)jsonArray.get(i);
+					DiyTableColumns column = JSON.toJavaObject(obj, DiyTableColumns.class);
+					columns.add(column);
+				}
+			}
+		}
         String dataSql = "select "; // 分页查询数据sql
         String columnSql = "1"; // 查询内容sql
         String whereSql = " where s.status = 1 and s.organization_id = " + organizationId; // 条件sql
@@ -164,23 +179,23 @@ public class DiyTableServiceImpl extends ServiceImpl<DiyTableMapper, DiyTable> i
                 // 字段加工
                 if (!StringUtils.isEmpty(column.getFormulaValue())) {
                     switch (column.getFormula()) {
-                        case 0: // 默认不加工
+                        case "0": // 默认不加工
                             columnSql += ", s." + column.getColumnName();
                             break;
-                        case 1: // 加（后续实现）
+                        case "1": // 加（后续实现）
                             columnSql += ", s." + column.getColumnName();
                             break;
-                        case 2: // 减（后续实现）
+                        case "2": // 减（后续实现）
                             columnSql += ", s." + column.getColumnName();
                             break;
-                        case 3: // 乘（后续实现）
+                        case "3": // 乘（后续实现）
                             columnSql += ", s." + column.getColumnName();
                             break;
-                        case 4: // 除（后续实现）
+                        case "4": // 除（后续实现）
                             columnSql += ", s." + column.getColumnName();
                             break;
-                        case 5: // 拼接
-                            columnSql += ", cast(s." + column.getColumnName() + " as char) + '" + column.getFormulaValue() + "' as " + column.getColumnName();
+                        case "5": // 拼接
+                            columnSql += ", concat(s." + column.getColumnName() + ", '" + column.getFormulaValue() + "') as " + column.getColumnName();
                             break;
                         default:
                             break;
@@ -191,36 +206,40 @@ public class DiyTableServiceImpl extends ServiceImpl<DiyTableMapper, DiyTable> i
                 }
             }
             // 拼接条件
-            if (column.getSearchType() == 1) { // 等于 
-                String searchValue = searchMap.get(column.getColumnName());
-                if (!StringUtils.isEmpty(searchValue)) {
-                    whereSql += " and " + sourceName + " = '" + searchValue + "'";
-                }
-            }
-            else if (column.getSearchType() == 2) { // 模糊查询
-                String searchValue = searchMap.get(column.getColumnName());
-                if (!StringUtils.isEmpty(searchValue)) {
-                    whereSql += " and " + sourceName + " like '%" + searchValue + "%'";
-                }
-            }
-            else if (column.getSearchType() == 3) {
-                String searchBeginValue = searchMap.get(column.getColumnName() + "_begin");
-                String searchEndValue = searchMap.get(column.getColumnName() + "_end");
-                if (!StringUtils.isEmpty(searchBeginValue)) {
-                    whereSql += " and " + sourceName + " >= '" + searchBeginValue + "'";
-                }
-                if (!StringUtils.isEmpty(searchEndValue)) {
-                    whereSql += " and " + sourceName + " <= '" + searchEndValue + "'";
-                }
+            if (column.getSearchType() != null){
+	            if ("1".equals(column.getSearchType())) { // 等于 
+	                String searchValue = searchMap.get(column.getColumnName());
+	                if (!StringUtils.isEmpty(searchValue)) {
+	                    whereSql += " and " + sourceName + " = '" + searchValue + "'";
+	                }
+	            }
+	            else if ("2".equals(column.getSearchType())) { // 模糊查询
+	                String searchValue = searchMap.get(column.getColumnName());
+	                if (!StringUtils.isEmpty(searchValue)) {
+	                    whereSql += " and " + sourceName + " like '%" + searchValue + "%'";
+	                }
+	            }
+	            else if ("3".equals(column.getSearchType())) {
+	                String searchBeginValue = searchMap.get(column.getColumnName() + "_begin");
+	                String searchEndValue = searchMap.get(column.getColumnName() + "_end");
+	                if (!StringUtils.isEmpty(searchBeginValue)) {
+	                    whereSql += " and " + sourceName + " >= '" + searchBeginValue + "'";
+	                }
+	                if (!StringUtils.isEmpty(searchEndValue)) {
+	                    whereSql += " and " + sourceName + " <= '" + searchEndValue + "'";
+	                }
+	            }
             }
             // 拼接排序项
-            if (column.getOrderBy() == 1) {
-                if (orderBy.equals("")) {
-                    orderBy += " order by " + sourceName + " asc";
-                }
-                else {
-                    orderBy += " , " + sourceName + " desc";
-                }
+            if (column.getOrderBy() != null) {
+	            if ("1".equals(column.getOrderBy())) {
+	                if (orderBy.equals("")) {
+	                    orderBy += " order by " + sourceName + " asc";
+	                }
+	                else {
+	                    orderBy += " , " + sourceName + " desc";
+	                }
+	            }
             }
         }
         orderBy = orderBy.equals("") ? " order by s.id desc" : orderBy;
