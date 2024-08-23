@@ -50,7 +50,6 @@ public class NoticeController {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "noticeId", value = "公告ID", required = true, dataType = "int") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败") })
 	@GetMapping("/getNoticeById")
-	@RequiredPermission("notice:view")
 	public ResponseData getNoticeById(int noticeId) {
 		Notice notice = noticeService.getById(noticeId);
 		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", notice);
@@ -69,7 +68,6 @@ public class NoticeController {
 		@ApiImplicitParam(name = "size", value = "每页数量", required = true, dataType = "int") })
 	@ApiResponses({ @ApiResponse(code = 1, message = "查询成功"), @ApiResponse(code = 0, message = "查询失败"), @ApiResponse(code = 3, message = "参数错误") })
 	@GetMapping("/getNoticePage")
-	@RequiredPermission("notice:view")
 	public ResponseData getNoticePage(String title, String beginDate, String endDate, Integer page, Integer size) {
 		if (null == page || null == size) {
 			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
