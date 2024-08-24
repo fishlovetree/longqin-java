@@ -6,11 +6,13 @@ import com.longqin.business.feign.FeignService;
 import com.longqin.business.mapper.DiyTableColumnsMapper;
 import com.longqin.business.mapper.DiyTableMapper;
 import com.longqin.business.service.IDiyTableService;
+import com.longqin.business.util.MyStringUtil;
 import com.longqin.business.util.OperationLog;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -175,29 +177,54 @@ public class DiyTableServiceImpl extends ServiceImpl<DiyTableMapper, DiyTable> i
                 leftJoin += " left join sys_user u on u.user_id = s.creator";
             }
             else {
-                sourceName = "s." + column.getColumnName();
                 // 字段加工
-                if (!StringUtils.isEmpty(column.getFormulaValue())) {
+                if (!StringUtil.isEmpty(column.getFormula()) && !StringUtils.isEmpty(column.getFormulaValue())) {
+                	String regexp = "^-?[0-9]+(\\.[0-9]+)?$";
                     switch (column.getFormula()) {
                         case "0": // 默认不加工
                             columnSql += ", s." + column.getColumnName();
                             break;
                         case "1": // 加（后续实现）
-                            columnSql += ", s." + column.getColumnName();
+                            if (MyStringUtil.isNumeric(column.getFormulaValue())){
+                        		columnSql += ", (CASE WHEN s." + column.getColumnName() + " REGEXP '" + regexp + "' THEN s." + column.getColumnName() + " + " 
+                        	    + column.getFormulaValue() + " ELSE s." + column.getColumnName() + " END) AS " + column.getColumnName();
+                        	}
+                        	else {
+                        		columnSql += ", s." + column.getColumnName();
+                        	}
                             break;
                         case "2": // 减（后续实现）
-                            columnSql += ", s." + column.getColumnName();
+                        	if (MyStringUtil.isNumeric(column.getFormulaValue())){
+                        		columnSql += ", (CASE WHEN s." + column.getColumnName() + " REGEXP '" + regexp + "' THEN s." + column.getColumnName() + " - " 
+                        	    + column.getFormulaValue() + " ELSE s." + column.getColumnName() + " END) AS " + column.getColumnName();
+                        	}
+                        	else {
+                        		columnSql += ", s." + column.getColumnName();
+                        	}
                             break;
                         case "3": // 乘（后续实现）
-                            columnSql += ", s." + column.getColumnName();
+                        	if (MyStringUtil.isNumeric(column.getFormulaValue())){
+                        		columnSql += ", (CASE WHEN s." + column.getColumnName() + " REGEXP '" + regexp + "' THEN s." + column.getColumnName() + " * " 
+                        	    + column.getFormulaValue() + " ELSE s." + column.getColumnName() + " END) AS " + column.getColumnName();
+                        	}
+                        	else {
+                        		columnSql += ", s." + column.getColumnName();
+                        	}
                             break;
                         case "4": // 除（后续实现）
-                            columnSql += ", s." + column.getColumnName();
+                        	if (MyStringUtil.isNumeric(column.getFormulaValue()) && Integer.parseInt(column.getFormulaValue()) != 0){
+                        		columnSql += ", (CASE WHEN s." + column.getColumnName() + " REGEXP '" + regexp + "' THEN s." + column.getColumnName() + " / " 
+                        	    + column.getFormulaValue() + " ELSE s." + column.getColumnName() + " END) AS " + column.getColumnName();
+                        	}
+                        	else {
+                        		columnSql += ", s." + column.getColumnName();
+                        	}
                             break;
                         case "5": // 拼接
                             columnSql += ", concat(s." + column.getColumnName() + ", '" + column.getFormulaValue() + "') as " + column.getColumnName();
                             break;
                         default:
+                        	columnSql += ", s." + column.getColumnName();
                             break;
                     }
                 }
