@@ -41,7 +41,7 @@
               <el-radio value="0">否</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="节点表单" v-show="nodeForm.showFormId">
+          <el-form-item label="节点表单">
             <el-select v-model="nodeForm.formId" placeholder="请选择节点表单" @change="handleFormId">
               <el-option
               v-for="item in formList"
@@ -170,7 +170,6 @@
     name: '',
     isApproval: '0',
     formId: '',
-    showFormId: true,
     cooperation: '0',
     departmentId: '0',
     positionId: '0',
