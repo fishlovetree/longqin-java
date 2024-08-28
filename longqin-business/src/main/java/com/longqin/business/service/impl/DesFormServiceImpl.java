@@ -47,44 +47,7 @@ public class DesFormServiceImpl extends ServiceImpl<DesFormMapper, DesForm> impl
     		return -1;
     	}
     	StringBuilder columns = new StringBuilder();
-    	for(int i = 0; i < jsonArray.size(); i++){
-            JSONObject obj = (JSONObject)jsonArray.get(i);
-            String columnType = "";
-            String type = obj.getString("type");
-            JSONObject options = obj.getJSONObject("options");
-            switch (type)
-            {
-                case "input":
-                    columnType = "varchar(100)";
-                    break;
-                case "textarea":
-                    columnType = "varchar(510)";
-                    break;
-                case "editor":
-                    columnType = "text";
-                    break;
-                case "upload":
-                    columnType = "varchar(200)";
-                    break;
-                case "tags":
-                    columnType = "varchar(200)";
-                    break;
-                case "tips":
-                case "note":
-                case "subtraction":
-                case "tab":
-                case "grid":
-                case "space":
-                    continue;
-                default:
-                    columnType = "varchar(50)";
-                    break;
-            }
-            String isNull = "true".equals(options.getString("required")) ? "NOT NULL" : "NULL DEFAULT NULL";
-            columns.append("`").append(options.getString("name")).append("` ").append(columnType)
-            .append(" CHARACTER SET utf8 COLLATE utf8_general_ci ").append(isNull).append(" COMMENT '")
-            .append(options.getString("label")).append("',");
-    	}
+    	generateColumns(jsonArray, columns);
     	int result = desFormMapper.createFormTable(tableName, columns.toString(), entity.getFormName());
     	if (result >= 0){
     		result = desFormMapper.insert(entity);
@@ -115,50 +78,103 @@ public class DesFormServiceImpl extends ServiceImpl<DesFormMapper, DesForm> impl
     		return -1;
     	}
     	StringBuilder columns = new StringBuilder();
-    	for(int i = 0; i < jsonArray.size(); i++){
-            JSONObject obj = (JSONObject)jsonArray.get(i);
-            String columnType = "";
-            String type = obj.getString("type");
-            JSONObject options = obj.getJSONObject("options");
-            switch (type)
-            {
-                case "input":
-                    columnType = "varchar(100)";
-                    break;
-                case "textarea":
-                    columnType = "varchar(510)";
-                    break;
-                case "editor":
-                    columnType = "text";
-                    break;
-                case "upload":
-                    columnType = "varchar(200)";
-                    break;
-                case "tags":
-                    columnType = "varchar(200)";
-                    break;
-                case "tips":
-                case "note":
-                case "subtraction":
-                case "tab":
-                case "grid":
-                case "space":
-                    continue;
-                default:
-                    columnType = "varchar(50)";
-                    break;
-            }
-            String isNull = "true".equals(options.getString("required")) ? "NOT NULL" : "NULL DEFAULT NULL";
-            columns.append("`").append(options.getString("name")).append("` ").append(columnType)
-            .append(" CHARACTER SET utf8 COLLATE utf8_general_ci ").append(isNull).append(" COMMENT '")
-            .append(options.getString("label")).append("',");
-    	}
+    	generateColumns(jsonArray, columns);
     	int result = desFormMapper.createFormTable(tableName, columns.toString(), entity.getFormName());
     	if (result >= 0){
     		result = desFormMapper.updateById(entity);
     	}
     	return result;
     }
+	
+	// 递归组装数据库表列
+	private void generateColumns(JSONArray jsonArray, StringBuilder columns){
+    	for(int i = 0; i < jsonArray.size(); i++){
+            JSONObject obj = (JSONObject)jsonArray.get(i);
+            String columnType = "";
+            String type = obj.getString("type");
+            JSONObject options = obj.getJSONObject("options");
+            String isNull = "true".equals(options.getString("required")) ? "NOT NULL" : "NULL DEFAULT NULL";
+            switch (type)
+            {
+                case "input":
+                    columnType = "varchar(100)";
+                    columns.append("`").append(options.getString("name")).append("` ").append(columnType)
+                    .append(" CHARACTER SET utf8 COLLATE utf8_general_ci ").append(isNull).append(" COMMENT '")
+                    .append(options.getString("label")).append("',");
+                    break;
+                case "textarea":
+                    columnType = "varchar(510)";
+                    columns.append("`").append(options.getString("name")).append("` ").append(columnType)
+                    .append(" CHARACTER SET utf8 COLLATE utf8_general_ci ").append(isNull).append(" COMMENT '")
+                    .append(options.getString("label")).append("',");
+                    break;
+                case "rich-editor":
+                    columnType = "text";
+                    columns.append("`").append(options.getString("name")).append("` ").append(columnType)
+                    .append(" CHARACTER SET utf8 COLLATE utf8_general_ci ").append(isNull).append(" COMMENT '")
+                    .append(options.getString("label")).append("',");
+                    break;
+                case "file-upload":
+                    columnType = "varchar(2000)";
+                    columns.append("`").append(options.getString("name")).append("` ").append(columnType)
+                    .append(" CHARACTER SET utf8 COLLATE utf8_general_ci ").append(isNull).append(" COMMENT '")
+                    .append(options.getString("label")).append("',");
+                    break;
+                case "grid":
+                	JSONArray cols = obj.getJSONArray("cols");
+                	for (int j =0 ; j < cols.size(); j++){
+                		JSONObject col = (JSONObject)cols.get(j);
+                		JSONArray colChildren = col.getJSONArray("widgetList");
+                		generateColumns(colChildren, columns);
+                	}
+                	break;
+                case "table":
+                	JSONArray rows = obj.getJSONArray("rows");
+                	for (int j =0 ; j < rows.size(); j++){
+                		JSONObject row = (JSONObject)rows.get(j);
+                		JSONArray rowCols = row.getJSONArray("cols");
+                		for (int k = 0; k < rowCols.size(); k++){
+                			JSONObject rowCol = (JSONObject)rowCols.get(k);
+                			JSONArray colChildren = rowCol.getJSONArray("widgetList"); 
+                			generateColumns(colChildren, columns);
+                		}
+                	}
+                	break;
+                case "tab":
+                	JSONArray tabs = obj.getJSONArray("tabs");
+                	for (int j =0 ; j < tabs.size(); j++){
+                		JSONObject tab = (JSONObject)tabs.get(j);
+                		JSONArray tabChildren = tab.getJSONArray("widgetList");
+                		generateColumns(tabChildren, columns);
+                	}
+                	break;
+                case "card":
+                	JSONArray cardChildren = obj.getJSONArray("widgetList");
+            		generateColumns(cardChildren, columns);
+                	break;
+                case "number":
+                case "radio":
+                case "checkbox":
+                case "select":
+                case "time":
+                case "time-range":
+                case "date":
+                case "date-range":
+                case "switch":
+                case "rate":
+                case "color":
+                case "slider":
+                case "cascader":
+                	columnType = "varchar(50)";
+                    columns.append("`").append(options.getString("name")).append("` ").append(columnType)
+                    .append(" CHARACTER SET utf8 COLLATE utf8_general_ci ").append(isNull).append(" COMMENT '")
+                    .append(options.getString("label")).append("',");
+                    break;
+                default:
+                    break;
+            }
+    	}
+	}
 	
 	@OperationLog(title = "删除表单", content = "'表单id：' + #id", operationType = "1")
 	@Override

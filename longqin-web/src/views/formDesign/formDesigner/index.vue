@@ -15,11 +15,11 @@
   const designerConfig = reactive({
     languageMenu: false,
     externalLink: false,
-    toolbarMaxWidth: 440,
-    importJsonButton: true,
+    toolbarMaxWidth: 300,
+    importJsonButton: false,
     exportJsonButton: true,
     exportCodeButton: false,
-    generateSFCButton: true,
+    generateSFCButton: false,
   });
 
   const formData = reactive<FormData>({
@@ -31,6 +31,7 @@
 
   const saveFormJson = () => {
     let formJson = vfDesigner.value.getFormJson();
+    dealFileUpload(formJson.widgetList);
 
     formData.tableName = formJson.formConfig.modelName;
     formData.formName = formJson.formConfig.refName;
@@ -45,6 +46,75 @@
       DesformAPI.createForm(formData).then((res) => {
         ElMessage.success('表单已保存！');
       });
+    }
+  }
+
+  // 处理文件上传组件路径和文件格式问题
+  const dealFileUpload = (widgetList:[]) => {
+    for(let i = 0; i < widgetList.length; i++){
+      let widget = widgetList[i];
+      let type = widget.type;
+      switch (type)
+      {
+        case "file-upload":
+          widget.options.uploadURL = "/api/bus/upload/uploadFiles";
+          if (!widget.options.fileTypes.includes("pdf")){
+            widget.options.fileTypes.push("pdf");
+          }
+          if (!widget.options.fileTypes.includes("txt")){
+            widget.options.fileTypes.push("txt");
+          }
+          
+          // widget.options.onUploadSuccess = "return [{name: '图片或文件名称',url: '上传后的图片或文件URL'}]";
+          break;
+        case "grid":
+          let cols = widget.cols;
+          for (let j = 0 ; j < cols.length; j++){
+            let col = cols[j];
+            dealFileUpload(col.widgetList);
+          }
+          break;
+        case "table":
+          let rows = widget.rows;
+          for (let j = 0 ; j < rows.length; j++){
+            let row = rows[j];
+            let rowCols = row.cols;
+            for (let k = 0; k < rowCols.length; k++){
+              let rowCol = rowCols[k];
+              dealFileUpload(rowCol.widgetList);
+            }
+          }
+          break;
+        case "tab":
+          let tabs = widget.tabs;
+          for (let j = 0 ; j < tabs.length; j++){
+            let tab = tabs[j];
+            dealFileUpload(tab.widgetList);
+          }
+          break;
+        case "card":
+          dealFileUpload(widget.widgetList);
+          break;
+        case "input":
+        case "textarea":
+        case "rich-editor":
+        case "number":
+        case "radio":
+        case "checkbox":
+        case "select":
+        case "time":
+        case "time-range":
+        case "date":
+        case "date-range":
+        case "switch":
+        case "rate":
+        case "color":
+        case "slider":
+        case "cascader":
+            break;
+        default:
+            break;
+      }
     }
   }
 

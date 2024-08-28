@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSON;
 import com.longqin.business.entity.DesForm;
 import com.longqin.business.entity.WfProcess;
 import com.longqin.business.entity.WfStep;
@@ -23,7 +23,6 @@ import com.longqin.business.service.IWfWorkService;
 import com.longqin.business.util.ResponseData;
 import com.longqin.business.util.ResponseEnum;
 import com.longqin.business.util.SessionUtil;
-import com.longqin.business.util.UploadUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -90,7 +89,14 @@ public class WfWorkController {
 		params.forEach((key, value)->{
             if (!Arrays.asList(flowKeys).contains(key)){
             	columns.add(key);
-            	values.add(value.toString());
+            	String valStr = value.toString();
+            	// 处理文件格式
+            	if (valStr.contains("uid") && valStr.contains("size") && valStr.contains("percentage") && valStr.contains("response")){
+                	values.add(JSON.toJSONString(value));
+            	}
+            	else{
+            		values.add(value.toString());
+            	}
             }
         });
 		int result = workService.dealWork(flowId, processId, direction, tableName, columns, values, SessionUtil.getSessionUser().getUserId(), 
@@ -238,37 +244,6 @@ public class WfWorkController {
 		map.put("list", stepList);
 		map.put("total", total);
 		return new ResponseData(ResponseEnum.SUCCESS.getCode(), "查询成功", map);
-	}
-	
-	/**
-	 * @Description 文件上传
-	 * @Author longqin
-	 * @Time: 2023年11月01日
-	 */
-	@ApiOperation(value = "文件上传", httpMethod = "POST")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "files", value = "附件", required = true, dataType = "File") })
-	@ApiResponses({ @ApiResponse(code = 1, message = "上传成功"), @ApiResponse(code = 0, message = "上传失败"),
-		@ApiResponse(code = 3, message = "参数错误")  })
-	@PostMapping("/uploadFiles")
-	public ResponseData uploadFiles(MultipartFile[] files) throws Exception {
-		if (null == files || files.length == 0) {
-			return new ResponseData(ResponseEnum.BADPARAM.getCode(), "参数错误");
-		}
-		List<String> filePaths = new ArrayList<String>();
-		for(int i = 0; i < files.length; i++) {
-			MultipartFile file = files[i];
-			String fileName = file.getOriginalFilename();
-			String filePath = UploadUtils.coverUpload(file.getInputStream(), fileName);
-			if(!filePath.equals("")) {
-				filePaths.add(filePath);
-			}
-		}
-		if (filePaths.size() > 0) {
-			return new ResponseData(ResponseEnum.SUCCESS.getCode(), "上传成功", filePaths);
-		}
-		else {
-			return new ResponseData(ResponseEnum.ERROR.getCode(), "上传失败", filePaths);
-		}
 	}
 	
 	/**

@@ -69,6 +69,7 @@ import { FormData } from "@/api/desform";
 import UserAPI from "@/api/user";
 import router from "@/router";
 import { useTagsViewStore } from "@/store";
+import { transferFormData } from "@/utils/index";
 
 const route = useRoute();
 const tagsViewStore = useTagsViewStore();
@@ -210,14 +211,8 @@ onMounted(() => {
 
       // 数据格式处理
       let historyData = data.formData;
+      transferFormData(historyData, formJson.widgetList);
       for(let key in historyData){
-        if (typeof historyData[key] === 'string' && historyData[key].includes('[') && historyData[key].includes(']')){
-          let str = historyData[key].substring(1, historyData[key].length - 1);
-          historyData[key] = str.split(',');
-        }
-        else if (isNumber(historyData[key])){
-          historyData[key] = Number(historyData[key])
-        }
         formData[key] = historyData[key];
       }
     }
@@ -237,27 +232,7 @@ onMounted(() => {
           {"name":"inputSubmitTime","label":"提交时间","labelAlign":"","type":"text","defaultValue":item.form.submitTime,"columnWidth":"200px" }});
           let historyFormData = item.formData;
           // 数据格式处理
-          for(let key in historyFormData){
-            if (typeof historyFormData[key] === 'string' && historyFormData[key].includes('[') && historyFormData[key].includes(']')){
-              let str = historyFormData[key].substring(1, historyFormData[key].length - 1);
-              historyFormData[key] = str.split(',');
-              for(let i = 0; i < historyFormData[key].length; i++){
-                historyFormData[key][i] = historyFormData[key][i].trim();
-                if (isNumber(historyFormData[key][i])){
-                  historyFormData[key][i] = Number(historyFormData[key][i]);
-                }
-              }
-            }
-            else if (isNumber(historyFormData[key])){
-              historyFormData[key] = Number(historyFormData[key])
-            }
-            else if (historyFormData[key] === "true"){
-              historyFormData[key] = true;
-            }
-            else if (historyFormData[key] === "false"){
-              historyFormData[key] = false;
-            }
-          }
+          transferFormData(historyFormData, historyFormJson.widgetList);
           formList.value.push({formJson: historyFormJson, formData: historyFormData});
         });
       })

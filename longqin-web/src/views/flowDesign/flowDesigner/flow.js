@@ -334,7 +334,7 @@ class Flow {
         handleIsApproval: function(id, value){
             flow.rectarr[id].setattr('isApproval', value);
             if (value == '1'){
-                nodeForm.formId = '1';
+                nodeForm.formId = 1;
             }
         },
         handleFormId: function(id, value){
