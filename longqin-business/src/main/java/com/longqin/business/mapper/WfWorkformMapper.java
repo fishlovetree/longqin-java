@@ -24,5 +24,5 @@ public interface WfWorkformMapper extends BaseMapper<WfWorkform> {
 	
 	List<WfWorkform> selectWorkFormList(@Param("workId")Integer workId);
 	
-	Map<String, Object> selectTableDatas(@Param("tableName") String tableName, @Param("processId") Integer processId);
+	Map<String, String> selectTableDatas(@Param("tableName") String tableName, @Param("processId") Integer processId);
 }

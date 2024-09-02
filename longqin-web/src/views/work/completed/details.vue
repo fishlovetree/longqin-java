@@ -22,7 +22,6 @@ defineOptions({
 import WorkAPI from "@/api/work";
 import router from "@/router";
 import flowHistory from "../backlog/components/flowHistory.vue";
-import { transferFormData } from "@/utils/index";
 
 const route = useRoute();
 
@@ -45,7 +44,27 @@ onMounted(() => {
           {"name":"inputSubmitTime","label":"提交时间","labelAlign":"","type":"text","defaultValue":item.form.submitTime,"columnWidth":"200px" }});
           let historyFormData = item.formData;
           // 数据格式处理
-          transferFormData(historyFormData, historyFormJson.widgetList);
+          for(let key in historyFormData){
+            if (typeof historyFormData[key] === 'string' && historyFormData[key].includes('[') && historyFormData[key].includes(']')){
+              let str = historyFormData[key].substring(1, historyFormData[key].length - 1);
+              historyFormData[key] = str.split(',');
+              for(let i = 0; i < historyFormData[key].length; i++){
+                historyFormData[key][i] = historyFormData[key][i].trim();
+                if (isNumber(historyFormData[key][i])){
+                  historyFormData[key][i] = Number(historyFormData[key][i]);
+                }
+              }
+            }
+            else if (isNumber(historyFormData[key])){
+              historyFormData[key] = Number(historyFormData[key])
+            }
+            else if (historyFormData[key] === "true"){
+              historyFormData[key] = true;
+            }
+            else if (historyFormData[key] === "false"){
+              historyFormData[key] = false;
+            }
+          }
           formList.value.push({formJson: historyFormJson, formData: historyFormData});
         });
       })

@@ -196,19 +196,13 @@ public class WfWorkServiceImpl extends ServiceImpl<WfWorkMapper, WfWork> impleme
                             	DesForm form = formMapper.selectById(link.getFormId());
                             	List<DesFormColumn> formColumns = formMapper.selectTableColumns(form.getTableName());
                             	// 获取表单数据
-                            	Map<String, Object> valueMap = workformMapper.selectTableDatas(form.getTableName(), processId);
+                            	Map<String, String> valueMap = workformMapper.selectTableDatas(form.getTableName(), workId);
                             	columns = new ArrayList<String>();
                             	values = new ArrayList<String>();
                             	for (DesFormColumn formColumn : formColumns) {
                             		columns.add(formColumn.getColumnName());
-                            		if (valueMap != null && valueMap.containsKey(formColumn.getColumnName())) {
-                            			Object val = valueMap.get(formColumn.getColumnName());
-                            			if (val != null){
-                            				values.add(val.toString());
-                            			}
-                            			else{
-                            				values.add("");
-                            			}
+                            		if (valueMap.containsKey(formColumn.getColumnName())) {
+                            			values.add(valueMap.get(formColumn.getColumnName()));
                             		}
                             		else {
                             			values.add("");
@@ -553,7 +547,7 @@ public class WfWorkServiceImpl extends ServiceImpl<WfWorkMapper, WfWork> impleme
         List<WfWorkform> list = workformMapper.selectWorkFormList(workId);
         if (list != null) {
             for(WfWorkform item : list) {
-            	Map<String, Object> formData = workformMapper.selectTableDatas(item.getTableName(), item.getProcessId());
+            	Map<String, String> formData = workformMapper.selectTableDatas(item.getTableName(), item.getProcessId());
             	Map<String, Object> map = new HashMap<String, Object>();
             	map.put("form", item);
             	map.put("formData", formData);

@@ -504,7 +504,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 							update(user);
 						}
 						else{
-							user.setPassword("11111111");
 							insert(user);
 						}
 					}
