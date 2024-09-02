@@ -142,6 +142,9 @@
                   :show-overflow-tooltip="true"
                   :min-width="item.width"
               >
+                <template #default="{ row }">
+                  <span v-html="row[item.columnName]"></span>
+                </template>
               </el-table-column>
             </el-table>
             <pagination
