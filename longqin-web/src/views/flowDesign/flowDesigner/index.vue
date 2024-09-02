@@ -10,7 +10,7 @@
           <el-option label="行政类" value="2" />
           <el-option label="业务类" value="3" />
         </el-select>
-        <el-button type="primary" @click="saveFlow" style="float:left;padding-left:5px;">保存</el-button>
+        <el-button type="primary" @click="saveFlow" style="float:left;margin-left:5px;">保存</el-button>
       </el-header>
       <el-main>
         <div id="wrapper" style="min-height: calc(100vh - 160px);"></div>

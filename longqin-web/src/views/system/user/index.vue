@@ -438,6 +438,9 @@ function handleCloseDialog() {
   formData.roleIds = '';
   formData.departmentId = undefined;
   formData.positionId = undefined;
+  formData.creator = null;
+  formData.createTime = null;
+  formData.organizationId = null;
 }
 
 /** 表单提交 */

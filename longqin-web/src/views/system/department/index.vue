@@ -229,6 +229,8 @@ function handleCloseDialog() {
   formData.parentId = -1;
   formData.departmentName = '';
   formData.description = '';
+  formData.creator = null;
+  formData.createTime = null;
   formData.organizationId = 0;
 }
 

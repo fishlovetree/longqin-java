@@ -349,6 +349,9 @@ function handleCloseDialog() {
   formData.security = null;
   formData.content = '';
   formData.attachments = '';
+  formData.creator = null;
+  formData.createTime = null;
+  formData.organizationId = null;
 }
 
 /** 删除公告 */

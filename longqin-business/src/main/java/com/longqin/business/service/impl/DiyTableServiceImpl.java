@@ -169,11 +169,11 @@ public class DiyTableServiceImpl extends ServiceImpl<DiyTableMapper, DiyTable> i
         String leftJoin = ""; // 链接其他表sql
         String orderBy = ""; // 排序sql
         for (DiyTableColumns column : columns) {
-            String sourceName = ""; // 未加工原始字段sql
+        	String sourceName = "s." + column.getColumnName(); // 未加工原始字段
             // 拼接查询项
             if ("creatorName".equals(column.getColumnName())) {
                 columnSql += ", u.nick_name as creatorName";
-                sourceName = "u.user_name";
+                sourceName = "u.nick_name";
                 leftJoin += " left join sys_user u on u.user_id = s.creator";
             }
             else {
@@ -184,7 +184,7 @@ public class DiyTableServiceImpl extends ServiceImpl<DiyTableMapper, DiyTable> i
                         case "0": // 默认不加工
                             columnSql += ", s." + column.getColumnName();
                             break;
-                        case "1": // 加（后续实现）
+                        case "1": // 加
                             if (MyStringUtil.isNumeric(column.getFormulaValue())){
                         		columnSql += ", (CASE WHEN s." + column.getColumnName() + " REGEXP '" + regexp + "' THEN s." + column.getColumnName() + " + " 
                         	    + column.getFormulaValue() + " ELSE s." + column.getColumnName() + " END) AS " + column.getColumnName();
@@ -193,7 +193,7 @@ public class DiyTableServiceImpl extends ServiceImpl<DiyTableMapper, DiyTable> i
                         		columnSql += ", s." + column.getColumnName();
                         	}
                             break;
-                        case "2": // 减（后续实现）
+                        case "2": // 减
                         	if (MyStringUtil.isNumeric(column.getFormulaValue())){
                         		columnSql += ", (CASE WHEN s." + column.getColumnName() + " REGEXP '" + regexp + "' THEN s." + column.getColumnName() + " - " 
                         	    + column.getFormulaValue() + " ELSE s." + column.getColumnName() + " END) AS " + column.getColumnName();
@@ -202,7 +202,7 @@ public class DiyTableServiceImpl extends ServiceImpl<DiyTableMapper, DiyTable> i
                         		columnSql += ", s." + column.getColumnName();
                         	}
                             break;
-                        case "3": // 乘（后续实现）
+                        case "3": // 乘
                         	if (MyStringUtil.isNumeric(column.getFormulaValue())){
                         		columnSql += ", (CASE WHEN s." + column.getColumnName() + " REGEXP '" + regexp + "' THEN s." + column.getColumnName() + " * " 
                         	    + column.getFormulaValue() + " ELSE s." + column.getColumnName() + " END) AS " + column.getColumnName();
@@ -211,7 +211,7 @@ public class DiyTableServiceImpl extends ServiceImpl<DiyTableMapper, DiyTable> i
                         		columnSql += ", s." + column.getColumnName();
                         	}
                             break;
-                        case "4": // 除（后续实现）
+                        case "4": // 除
                         	if (MyStringUtil.isNumeric(column.getFormulaValue()) && Integer.parseInt(column.getFormulaValue()) != 0){
                         		columnSql += ", (CASE WHEN s." + column.getColumnName() + " REGEXP '" + regexp + "' THEN s." + column.getColumnName() + " / " 
                         	    + column.getFormulaValue() + " ELSE s." + column.getColumnName() + " END) AS " + column.getColumnName();

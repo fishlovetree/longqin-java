@@ -253,6 +253,8 @@ function handleCloseDialog() {
   formData.positionName = '';
   formData.description = '';
   formData.positionLevel = undefined;
+  formData.creator = null;
+  formData.createTime = null;
   formData.organizationId = 0;
 }
 

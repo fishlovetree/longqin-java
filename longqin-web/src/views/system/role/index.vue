@@ -276,6 +276,8 @@ function handleCloseDialog() {
   formData.roleId = undefined;
   formData.roleName = '';
   formData.description = '';
+  formData.creator = null;
+  formData.createTime = null;
   formData.organizationId = 0;
 }
 
