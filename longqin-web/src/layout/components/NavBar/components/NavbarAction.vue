@@ -230,7 +230,7 @@ function logout() {
         tagsViewStore.delAllViews();
       })
       .then(() => {
-        router.push(`/login?redirect=${route.fullPath}`);
+        //router.push(`/login?redirect=${route.fullPath}`);
       });
   }).catch(()=>{})
 }

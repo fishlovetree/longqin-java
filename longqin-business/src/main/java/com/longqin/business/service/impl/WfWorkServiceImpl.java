@@ -196,7 +196,7 @@ public class WfWorkServiceImpl extends ServiceImpl<WfWorkMapper, WfWork> impleme
                             	DesForm form = formMapper.selectById(link.getFormId());
                             	List<DesFormColumn> formColumns = formMapper.selectTableColumns(form.getTableName());
                             	// 获取表单数据
-                            	Map<String, Object> valueMap = workformMapper.selectTableDatas(form.getTableName(), workId);
+                            	Map<String, Object> valueMap = workformMapper.selectWorkTableDatas(form.getTableName(), workId);
                             	columns = new ArrayList<String>();
                             	values = new ArrayList<String>();
                             	for (DesFormColumn formColumn : formColumns) {

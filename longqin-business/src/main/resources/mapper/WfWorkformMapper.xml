@@ -35,5 +35,10 @@
         select s.* from ${tableName} s left join wf_workform f on f.form_data_id = s.id 
         where f.process_id = ${processId} and f.table_name = '${tableName}' order by s.id desc limit 1
     </select>
+    
+    <select id="selectWorkTableDatas" resultType="java.util.HashMap">
+        select s.* from ${tableName} s left join wf_workform f on f.form_data_id = s.id 
+        where f.work_id = ${workId} and f.table_name = '${tableName}' order by s.id desc limit 1
+    </select>
 
 </mapper>

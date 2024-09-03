@@ -33,10 +33,11 @@ defineOptions({
 import WorkAPI from "@/api/work";
 import { FormData } from "@/api/desform";
 import router from "@/router";
-import { useTagsViewStore } from "@/store";
+import { useTagsViewStore, useSettingsStore } from "@/store";
 
 const route = useRoute();
 const tagsViewStore = useTagsViewStore();
+const settingsStore = useSettingsStore();
 
 const formJson = reactive({"widgetList":[],"formConfig":{"modelName":"formData","refName":"vForm","rulesName":"rules","labelWidth":80,"labelPosition":"left","size":"","labelAlign":"label-left-align","cssCode":"","customClass":"","functions":"","layoutType":"PC","jsonVersion":3,"onFormCreated":"","onFormMounted":"","onFormDataChange":""}})
 const formData = reactive({})
@@ -64,7 +65,9 @@ const submitForm = () => {
       .then(({data}) => {
         ElMessage.success(data);
         // 跳转到流程发起
-        tagsViewStore.closeCurrentView();
+        if (settingsStore.tagsView){
+          tagsViewStore.closeCurrentView();
+        }
         router.push({ path: '/startflow/view'});
       })
       .finally(() => (loading.value = false));

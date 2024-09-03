@@ -68,11 +68,12 @@ import WorkAPI from "@/api/work";
 import { FormData } from "@/api/desform";
 import UserAPI from "@/api/user";
 import router from "@/router";
-import { useTagsViewStore } from "@/store";
+import { useTagsViewStore, useSettingsStore } from "@/store";
 import { transferFormData } from "@/utils/index";
 
 const route = useRoute();
 const tagsViewStore = useTagsViewStore();
+const settingsStore = useSettingsStore();
 
 const formList = ref([]);
 const vHistoryFormRef = ref(null);
@@ -105,7 +106,9 @@ const submitForm = () => {
       .then(({data}) => {
         ElMessage.success(data);
         // 跳转到待办工作
-        tagsViewStore.closeCurrentView();
+        if (settingsStore.tagsView){
+          tagsViewStore.closeCurrentView();
+        }
         router.push({ path: '/backlog/view'});
       })
       .finally(() => (loading.value = false));
@@ -158,7 +161,9 @@ const handleSelectUser = () => {
       .then(({data}) => {
         ElMessage.success("转办成功");
         // 跳转到待办工作
-        tagsViewStore.closeCurrentView();
+        if (settingsStore.tagsView){
+          tagsViewStore.closeCurrentView();
+        }
         router.push({ path: '/backlog/view'});
       })
       .finally(() => (loading.value = false));
@@ -178,7 +183,9 @@ const handleReject = () => {
       .then(({data}) => {
         ElMessage.success(data);
         // 跳转到待办工作
-        tagsViewStore.closeCurrentView();
+        if (settingsStore.tagsView){
+          tagsViewStore.closeCurrentView();
+        }
         router.push({ path: '/backlog/view'});
       })
       .finally(() => (loading.value = false));
