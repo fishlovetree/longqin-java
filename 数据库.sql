@@ -793,6 +793,26 @@ LOCK TABLES `wf_workform` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `sys_matter`
+--
+
+DROP TABLE IF EXISTS `sys_matter`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sys_matter` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `matter` varchar(50) NOT NULL COMMENT '事项',
+  `matter_date` date NOT NULL COMMENT '事项日期',
+  `matter_time` time NOT NULL COMMENT '事项时间',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1-未办，0-已办',
+  `creator` int(11) NOT NULL COMMENT '创建人id',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `organization_id` int(11) NOT NULL COMMENT '组织机构id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COMMENT='事项';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping routines for database 'longqin'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
