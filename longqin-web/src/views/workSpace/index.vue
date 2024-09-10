@@ -195,65 +195,7 @@
             </div>
           </template>
 
-          <el-calendar v-model="calendar" >
-            <template #date-cell="{ data }">
-              <el-popover placement="right" :width="400" trigger="click">
-                <template #reference>
-                  <span @click="viewDayWork(data)">
-                    {{ data.day.split('-').slice(2).join() }}
-                  </span>
-                </template>
-                <span style="padding-left:5px;">事项日期：{{ matterDate }}</span>
-                <div style="padding:5px;">
-                  <el-input style="width:120px;padding-right:5px;" placeholder="请输入事项" v-model="matterInput" />
-                  <el-time-picker
-                    v-model="matterTime"
-                    style="width:150px;padding-right:5px;"
-                    value-format="HH:mm:ss"
-                    placeholder="请选择时间"
-                    :teleported="false"
-                  />
-                  <el-button
-                  type="success"
-                  @click="handleMatterAdd()"
-                  >保存</el-button
-                >
-                </div>
-                <el-table :data="matterGridData">
-                  <el-table-column width="120" prop="matter" label="事项" show-overflow-tooltip/>
-                  <el-table-column width="100" property="matterTime" label="时间" />
-                  <el-table-column width="80" property="status" label="状态">
-                    <template #default="scope">
-                      <el-tooltip content="置为已办" placement="top-start"
-                      >
-                      <el-tag v-if="scope.row.status === 1" type="warning" cursor="pointer"
-                        @click="updateMatterStatus(scope.row.id)">未办</el-tag
-                      >
-                      </el-tooltip>
-                      <el-tag v-if="scope.row.status === 0" type="success"
-                        >已办</el-tag
-                      >
-                    </template>
-                  </el-table-column>
-                  <el-table-column width="80" label="操作" align="left">
-                    <template #default="scope">
-                      <el-button
-                        type="danger"
-                        link
-                        size="small"
-                        @click.stop="handleMatterDelete(scope.row.id)"
-                      >
-                        删除
-                      </el-button>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </el-popover>
-              <!-- <span @click="viewDayWork(data)">
-                {{ data.day.split('-').slice(2).join() }}
-              </span> -->
-            </template>
-          </el-calendar>
+          <el-calendar v-model="calendar" />
         </el-card>
       </el-col>
     </el-row>
@@ -327,7 +269,6 @@ import WorkAPI, { WorkPageVO, WorkPageQuery } from "@/api/work";
 import NoticeAPI, { NoticePageVO, NoticePageQuery } from "@/api/notice";
 import DesflowAPI, { FlowPageVO, FlowPageQuery } from "@/api/desflow";
 import UserAPI, { UserPageVO } from "@/api/user";
-import MatterAPI, { MatterVO, MatterForm } from "@/api/matter";
 
 import StatsAPI, { VisitStatsVO } from "@/api/log";
 const userStore = useUserStore();
@@ -578,49 +519,6 @@ function handleStart(flow) {
 
 // 日历
 const calendar = ref(new Date());
-const matterGridData = ref([]);
-const matterDate = ref('');
-const matterInput = ref('');
-const matterTime = ref('');
-
-function handleMatterQuery(){
-  MatterAPI.getList(matterDate.value).then(({data}) => {
-    matterGridData.value = data;
-  });
-}
-
-function viewDayWork(date){
-  matterDate.value = date.day;
-  handleMatterQuery();
-}
-
-const matterFormData = reactive<MatterForm>({
-  id: undefined,
-  matter: '',
-  matterDate: '',
-  matterTime: '',
-});
-
-function handleMatterAdd(){
-  matterFormData.matter = matterInput.value;
-  matterFormData.matterDate = matterDate.value;
-  matterFormData.matterTime = matterTime.value;
-  MatterAPI.add(matterFormData).then(() => {
-    handleMatterQuery();
-  });
-}
-
-function handleMatterDelete(id){
-  MatterAPI.deleteById(id).then(() => {
-    handleMatterQuery();
-  });
-}
-
-function updateMatterStatus(id){
-  MatterAPI.updateStatus(id).then(() => {
-    handleMatterQuery();
-  });
-}
 
 onMounted(() => {
   handleBacklogQuery();
@@ -647,13 +545,5 @@ onMounted(() => {
   width: 100%;
   height: 30px;
   text-align: center;
-  padding: 0px;
-}
-.calendar-card .el-calendar-table .el-calendar-day span{
-  display: block;
-  width: 100%;
-  height: 30px;
-  text-align: center;
-  padding: 5px;
 }
 </style>
